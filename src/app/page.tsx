@@ -120,10 +120,10 @@ export default function Home() {
           <div className={pageStyles.container}>
             <Episode episode={episodes[selectedEpisodeKey]} setDone={setDone} />
             {/* <Editor data="this is just a teest" /> */}
+            <Player seek={seek} subtitles={subtitles} />
           </div>
         </>
       )}
-      <Player seek={seek} subtitles={subtitles} />
     </>
   )
 }

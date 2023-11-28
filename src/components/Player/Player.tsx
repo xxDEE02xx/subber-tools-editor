@@ -20,7 +20,7 @@ const Player: FC<PlayerProps> = ({ seek, subtitles }) => {
   const [playing, setPlaying] = useState<boolean>(false)
 
   useEffect(() => {
-    setPosition({ x: window.innerWidth - 520, y: window.innerHeight - 320 })
+    setPosition({ x: window.innerWidth - 725, y: window.innerHeight - 400 })
   }, [])
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const Player: FC<PlayerProps> = ({ seek, subtitles }) => {
       }}
       minWidth={500}
       minHeight={300}
-      bounds="window"
+      bounds="parent"
       dragHandleClassName="header-draggable"
     >
       <div className={playerStyles.content}>

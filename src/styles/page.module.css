@@ -1,4 +1,6 @@
 .container {
-  padding: 100px 2rem 0 226px;
+  margin: 76px 0 0 205px;
+  padding: 24px 24px 0 24px;
   text-align: left;
+  min-height: calc(100vh - 76px);
 }
