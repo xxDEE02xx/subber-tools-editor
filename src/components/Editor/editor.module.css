@@ -1,0 +1,21 @@
+.wrapper {
+  position: relative;
+  padding: 16px 0;
+}
+
+.wrapper strong {
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  text-decoration: underline;
+  text-decoration-color: #e00000;
+}
+
+.wrapper strong:hover {
+  background-color: #faebeb;
+}
+
+.wrapper .ProseMirror:focus {
+  outline: none;
+}
