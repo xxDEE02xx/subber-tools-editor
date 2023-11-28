@@ -1,0 +1,5 @@
+<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="checkbox">
+<path id="box" d="M0.5 5C0.5 2.51472 2.51472 0.5 5 0.5H11C13.4853 0.5 15.5 2.51472 15.5 5V11C15.5 13.4853 13.4853 15.5 11 15.5H5C2.51472 15.5 0.5 13.4853 0.5 11V5Z" stroke="white" stroke-opacity="0.55"/>
+</g>
+</svg>

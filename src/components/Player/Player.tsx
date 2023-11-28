@@ -46,7 +46,7 @@ const Player: FC<PlayerProps> = ({ seek, subtitles }) => {
       dragHandleClassName="header-draggable"
     >
       <div className={playerStyles.content}>
-          <h1 className={`header-draggable ${playerStyles.header}`}>Sintel</h1>
+          <h1 className={`header-draggable ${playerStyles.header}`}>Marry Me!</h1>
           <div className={playerStyles.videoWrapper}>
             <div className={playerStyles.playerWrapper}>
               <ReactPlayer

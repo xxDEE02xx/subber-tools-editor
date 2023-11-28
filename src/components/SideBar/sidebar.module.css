@@ -1,0 +1,65 @@
+.wrapper {
+  display: block;
+  position: fixed;
+  z-index: 9;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 205px;
+  padding: 100px 24px 0;
+  color: #FFFFFF;
+  background: radial-gradient(50% 50% at 50% 100%, rgba(3, 48, 47, 0.50) 0%, rgba(3, 48, 47, 0.00) 100%), linear-gradient(180deg, rgba(29, 29, 29, 0.50) 0%, rgba(29, 29, 29, 0.50) 25%, rgba(0, 2, 140, 0.06) 100%), #1D1D1D;
+}
+
+.show {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.title {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+  margin-bottom: 24px;
+}
+
+.nav {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  margin-bottom: 4px;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(196, 195, 196, 0.25);
+  margin: 16px 0;
+  border: none;
+}
+
+.listItem {
+  display: flex;
+  gap: 10px;
+  padding-left: 24px;
+  align-items: center;
+  margin-top: 8px;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
