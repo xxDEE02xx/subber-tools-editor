@@ -34,3 +34,13 @@
   top: 0;
   left: 0;
 }
+
+.subWrapper {
+  position: absolute;
+  z-index: 999;
+  width: 100%;
+  bottom: 30px;
+  left: 0;
+  color: #FFFFFF;
+  pointer-events: none;
+}

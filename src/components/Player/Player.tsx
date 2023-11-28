@@ -3,13 +3,18 @@ import React, { FC, useEffect, useState, useRef } from 'react'
 import { Rnd } from "react-rnd"
 import ReactPlayer from 'react-player/file'
 
+import { SubType } from '@/types/subtitle'
+
 import playerStyles from './player.module.css'
 
-type PlayerProp = {
+import { Subtitle } from './Subtitle'
+
+type PlayerProps = {
   seek: number | null;
+  subtitles: SubType[];
 }
 
-const Player: FC<PlayerProp> = ({ seek }) => {
+const Player: FC<PlayerProps> = ({ seek, subtitles }) => {
   const playerRef = useRef<ReactPlayer>(null);
   const [position, setPosition] = useState<Record<string, number>>({ x: 0, y: 0 })
   const [playing, setPlaying] = useState<boolean>(false)
@@ -41,13 +46,13 @@ const Player: FC<PlayerProp> = ({ seek }) => {
       dragHandleClassName="header-draggable"
     >
       <div className={playerStyles.content}>
-          <h1 className={`header-draggable ${playerStyles.header}`}>Big Buck Bunny</h1>
+          <h1 className={`header-draggable ${playerStyles.header}`}>Sintel</h1>
           <div className={playerStyles.videoWrapper}>
             <div className={playerStyles.playerWrapper}>
               <ReactPlayer
                 ref={playerRef}
                 key={1}
-                url="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                url="/video/sintel-short.mp4"
                 controls={true}
                 pip={false}
                 width="100%"
@@ -55,6 +60,7 @@ const Player: FC<PlayerProp> = ({ seek }) => {
                 onError={e => console.log('onError', e)}
                 playing={playing}
               />
+              <Subtitle playerRef={playerRef} subtitles={subtitles} />
             </div>
           </div>
       </div>
