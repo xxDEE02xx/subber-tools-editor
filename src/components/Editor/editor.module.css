@@ -1,6 +1,11 @@
 .wrapper {
   position: relative;
-  padding: 16px 0;
+  padding: 0;
+}
+
+.editorContent > div {
+  padding: 16px;
+  border-radius: 4px;
 }
 
 .wrapper strong {
@@ -18,4 +23,53 @@
 
 .wrapper .ProseMirror:focus {
   outline: none;
+}
+
+.editorCount {
+  text-align: right;
+  color: rgba(0, 0, 0, 0.22);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 20px;
+  height: 20px;
+}
+
+.recommendation {
+  margin-top: 10px;
+  border-radius: 6px;
+  background: rgb(12, 155, 255, 0.08);
+  padding: 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.recommendationLeft {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+  align-items: center;
+}
+.recommendationLeft p {
+  color: rgba(0, 0, 0, 0.72);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+.recommendationRight {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  align-items: center;
+}
+.recommendationRight button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #0C9BFF;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
 }

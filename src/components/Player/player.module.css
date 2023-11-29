@@ -7,17 +7,28 @@
 }
 
 .header {
-  font-size: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 0 12px;
-  margin: 0;
-  text-align: left;
+  height: 38px;
   border-bottom: 1px solid #dddddd;
   cursor: grab;
-  height: 38px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  align-content: center;
+}
+.header p {
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+.header button {
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  cursor: pointer;
 }
 
 .videoWrapper {

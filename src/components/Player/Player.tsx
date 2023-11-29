@@ -9,12 +9,7 @@ import playerStyles from './player.module.css'
 
 import { Subtitle } from './Subtitle'
 
-type PlayerProps = {
-  seek: number | null;
-  subtitles: SubType[];
-}
-
-const Player: FC<PlayerProps> = ({ seek, subtitles }) => {
+const Player: FC<PlayerProps> = ({ seek, subtitles, shouldShowPlayer, hidePlayer }) => {
   const playerRef = useRef<ReactPlayer>(null);
   const [position, setPosition] = useState<Record<string, number>>({ x: 0, y: 0 })
   const [playing, setPlaying] = useState<boolean>(false)
@@ -29,6 +24,11 @@ const Player: FC<PlayerProps> = ({ seek, subtitles }) => {
       setPlaying(true)
     }
   }, [playerRef, seek])
+  
+  const onHidePlayer = () => {
+    setPlaying(false)
+    hidePlayer()
+  }
 
   if (position.x === 0) return null
 
@@ -45,8 +45,11 @@ const Player: FC<PlayerProps> = ({ seek, subtitles }) => {
       bounds="parent"
       dragHandleClassName="header-draggable"
     >
-      <div className={playerStyles.content}>
-          <h1 className={`header-draggable ${playerStyles.header}`}>Marry Me!</h1>
+      <div className={playerStyles.content} style={{ display: shouldShowPlayer ? 'block' : 'none' }}>
+          <h1 className={`header-draggable ${playerStyles.header}`}>
+            <p>Marry Me!</p>
+            <button onClick={onHidePlayer}>close</button>
+          </h1>
           <div className={playerStyles.videoWrapper}>
             <div className={playerStyles.playerWrapper}>
               <ReactPlayer
@@ -66,6 +69,13 @@ const Player: FC<PlayerProps> = ({ seek, subtitles }) => {
       </div>
     </Rnd>
   )
+}
+
+type PlayerProps = {
+  seek: number | null;
+  subtitles: SubType[];
+  shouldShowPlayer?: boolean;
+  hidePlayer: () => void;
 }
 
 export { Player }

@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react'
 
 import pageStyles from '@/styles/page.module.css'
 
-import { Editor } from '@/components/Editor'
 import { Player } from '@/components/Player'
 import { MenuBar } from '@/components/MenuBar'
 import { SideBar } from '@/components/SideBar'
@@ -76,6 +75,7 @@ export default function Home() {
   const [subtitles, setSubtitles] = useState<SubType[]>([])
   const [episodes, setEpisodes] = useState<EpisodeType[]>([])
   const [selectedEpisodeKey, setSelectedEpisodeKey] = useState<number | null>(null)
+  const [shouldShowPlayer, setShouldShowPlayer] = useState<boolean>(false)
 
   useEffect(() => {
     setSubtitles(Subtitles)
@@ -85,6 +85,11 @@ export default function Home() {
     setEpisodes(Episodes)
     setSelectedEpisodeKey(0)
   }, [])
+
+  const showAndSeekPlayer = (value: number) => {
+    setShouldShowPlayer(true)
+    setSeek(value)
+  }
 
   const setDone = (episodeId: number, partId: number): void => {
     if (selectedEpisodeKey !== null) {
@@ -118,9 +123,13 @@ export default function Home() {
         <>
           <SideBar episodes={episodes} selectedEpisodeKey={selectedEpisodeKey} />
           <div className={pageStyles.container}>
-            <Episode episode={episodes[selectedEpisodeKey]} setDone={setDone} />
-            {/* <Editor data="this is just a teest" /> */}
-            <Player seek={seek} subtitles={subtitles} />
+            <Episode episode={episodes[selectedEpisodeKey]} setDone={setDone} showAndSeekPlayer={showAndSeekPlayer} />
+            <Player
+              seek={seek}
+              subtitles={subtitles}
+              shouldShowPlayer={shouldShowPlayer}
+              hidePlayer={() => setShouldShowPlayer(false)}
+            />
           </div>
         </>
       )}

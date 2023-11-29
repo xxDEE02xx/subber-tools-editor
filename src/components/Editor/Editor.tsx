@@ -1,12 +1,15 @@
 'use client'
 import React, { FC, useEffect, useState } from 'react'
+import Image from 'next/image'
 
 import { BubbleMenu, EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import CuteQcIcon from "../../../public/icons/cutesyqc.svg"
 
 import editorStyles from './editor.module.css'
 
 const Editor: FC<EditorProps> = ({ data, onChange }) => {
+  const [withRecommendation, setWithRecommendation] = useState<boolean>(true)
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -56,11 +59,19 @@ const Editor: FC<EditorProps> = ({ data, onChange }) => {
   //     }
   //   }
   // }, [textContent])
+  const isFocused = editor?.isFocused
+  const editorTextContent = editor?.state.doc.textContent
 
   useEffect(() => {
     const dataDestruct = data.replace('teest', '<strong>teest</strong>')
     editor?.commands.setContent(dataDestruct)
   }, [editor])
+
+  const applyRecommnedation = () => {
+    const text = `🎵 ${editor?.state.doc.textContent} 🎵`
+    editor?.commands.setContent(text)
+    setWithRecommendation(false)
+  }
 
   return (
     <div className={editorStyles.wrapper}>
@@ -71,7 +82,22 @@ const Editor: FC<EditorProps> = ({ data, onChange }) => {
           Edit
         </button>
       </BubbleMenu>}
-      <EditorContent editor={editor} />
+      <EditorContent editor={editor} className={editorStyles.editorContent} />
+      <div className={editorStyles.editorCount}>
+        {isFocused && `${editorTextContent?.length || 0} / 5000`}
+      </div>
+      {withRecommendation && (
+        <div className={editorStyles.recommendation}>
+          <div className={editorStyles.recommendationLeft}>
+            <Image src={CuteQcIcon} height={24} width={24} alt="cute qc icon" />
+            <p>This scene may contain lyrics, please format the sentence using “🎵” symbol</p>
+          </div>
+          <div className={editorStyles.recommendationRight}>
+            <button onClick={applyRecommnedation}>Apply</button>
+            <button onClick={() => setWithRecommendation(false)}>Ignore</button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

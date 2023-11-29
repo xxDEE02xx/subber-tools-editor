@@ -15,9 +15,11 @@ import episodeStyles from './episode.module.css'
 
 import { EpisodeType } from '@/types/episode'
 
+import { SubtitlesEditor } from '@/components/SubtitlesEditor'
+
 const OptionUsers = ['Username 1', 'Username 2', 'Username 3']
 
-const Episode: FC<EpisodeProps> = ({ episode, setDone }) => {
+const Episode: FC<EpisodeProps> = ({ episode, setDone, showAndSeekPlayer }) => {
   const selectedPart = episode.parts.find(part => !part.isDone)
   const lastPart = episode.parts[episode.parts.length - 1]
   const [openAssigned, setOpenAssigned] = useState<boolean>(false)
@@ -82,6 +84,9 @@ const Episode: FC<EpisodeProps> = ({ episode, setDone }) => {
           </div>
         </div>
       </div>
+      <div className={episodeStyles.subtitlesWrapper}>
+        <SubtitlesEditor showAndSeekPlayer={showAndSeekPlayer} />
+      </div>
     </div>
   )
 }
@@ -89,6 +94,7 @@ const Episode: FC<EpisodeProps> = ({ episode, setDone }) => {
 type EpisodeProps = {
   episode: EpisodeType;
   setDone: (episodeId: number, partId: number) => void;
+  showAndSeekPlayer: (value: number) => void;
 }
 
 export { Episode }

@@ -1,0 +1,42 @@
+.wrapper {
+  position: relative;
+}
+
+.itemWrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+  gap: 24px;
+}
+
+.itemDivider {
+  margin: 16px -24px 0;
+  height: 1px;
+  background: #F2F2F2;
+  border: none;
+}
+
+.period {
+  position: relative;
+  width: 128px;
+}
+.period button {
+  background: none;
+  border: none;
+  color: #0863A3;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.editor {
+  position: relative;
+  width: 50%;
+}
+
+.actions {
+  position: relative;
+}
