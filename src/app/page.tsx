@@ -59,15 +59,6 @@ const Episodes = [
       {id: 3, isDone: false, title: 'Part 3'}
     ]
   },
-  {
-    id: 3,
-    title: 'Episode 3',
-    parts: [
-      {id: 1, isDone: false, title: 'Part 1'},
-      {id: 2, isDone: false, title: 'Part 2'},
-      {id: 3, isDone: false, title: 'Part 3'}
-    ]
-  }
 ]
 
 export default function Home() {
@@ -129,6 +120,7 @@ export default function Home() {
               subtitles={subtitles}
               shouldShowPlayer={shouldShowPlayer}
               hidePlayer={() => setShouldShowPlayer(false)}
+              episodeCount={selectedEpisodeKey+1}
             />
           </div>
         </>

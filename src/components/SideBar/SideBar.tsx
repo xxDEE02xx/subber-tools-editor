@@ -6,6 +6,7 @@ import sidebarStyles from './sidebar.module.css'
 
 import CheckboxIcon from "../../../public/icons/checkbox.svg"
 import CheckboxEmptyIcon from "../../../public/icons/checkboxEmpty.svg"
+import BackIcon from "../../../public/icons/back.svg"
 
 import { EpisodeType, PartType } from '@/types/episode'
 
@@ -27,7 +28,7 @@ const SideBar: FC<SideBarProps> = ({ episodes, selectedEpisodeKey }) => {
   return (
     <div className={sidebarStyles.wrapper}>
       <div className={sidebarStyles.show}>Show</div>
-      <div className={sidebarStyles.title}>Marry Me!</div>
+      <div className={sidebarStyles.title}>Meow~Ears Up!</div>
       <ul className={sidebarStyles.nav}>
         <li>Team notes</li>
         <li>Editing shortcuts</li>
@@ -43,6 +44,12 @@ const SideBar: FC<SideBarProps> = ({ episodes, selectedEpisodeKey }) => {
           </Accordion>
         )
       })}
+      <div className={sidebarStyles.backToSubberTools}>
+        <a href="https://subber.viki.com/translations/1240611">
+          <Image src={BackIcon} height={16} width={15} alt="back icon" />
+          <span>Back to Subber Tool</span>
+        </a>
+      </div>
     </div>
   )
 }

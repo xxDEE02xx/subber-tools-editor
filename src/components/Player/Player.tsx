@@ -9,7 +9,13 @@ import playerStyles from './player.module.css'
 
 import { Subtitle } from './Subtitle'
 
-const Player: FC<PlayerProps> = ({ seek, subtitles, shouldShowPlayer, hidePlayer }) => {
+const Player: FC<PlayerProps> = ({
+  seek,
+  subtitles,
+  shouldShowPlayer,
+  hidePlayer,
+  episodeCount
+}) => {
   const playerRef = useRef<ReactPlayer>(null);
   const [position, setPosition] = useState<Record<string, number>>({ x: 0, y: 0 })
   const [playing, setPlaying] = useState<boolean>(false)
@@ -47,7 +53,7 @@ const Player: FC<PlayerProps> = ({ seek, subtitles, shouldShowPlayer, hidePlayer
     >
       <div className={playerStyles.content} style={{ display: shouldShowPlayer ? 'block' : 'none' }}>
           <h1 className={`header-draggable ${playerStyles.header}`}>
-            <p>Marry Me!</p>
+            <p>Meow~Ears Up!</p>
             <button onClick={onHidePlayer}>close</button>
           </h1>
           <div className={playerStyles.videoWrapper}>
@@ -55,7 +61,7 @@ const Player: FC<PlayerProps> = ({ seek, subtitles, shouldShowPlayer, hidePlayer
               <ReactPlayer
                 ref={playerRef}
                 key={1}
-                url="/video/sintel-short.mp4"
+                url={`/video/meow-episode-${episodeCount}.mp4`}
                 controls={true}
                 pip={false}
                 width="100%"
@@ -76,6 +82,7 @@ type PlayerProps = {
   subtitles: SubType[];
   shouldShowPlayer?: boolean;
   hidePlayer: () => void;
+  episodeCount: number;
 }
 
 export { Player }
