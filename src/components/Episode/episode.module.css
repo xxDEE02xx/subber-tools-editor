@@ -64,3 +64,111 @@
   height: calc(100vh - 215px);
   overflow: auto;
 }
+
+.goUp {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  cursor: pointer;
+  z-index: 100;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+  border-radius: 50%;
+}
+
+.doneFooter {
+  margin-top: 32px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 14px;
+}
+.doneFooter p {
+  color: rgba(0, 0, 0, 0.72);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 0;
+  padding: 0;
+}
+.doneFooter button {
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  color: rgba(0, 0, 0, 0.72);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  padding: 4px 16px;
+  line-height: 24px;
+  text-transform: capitalize;
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  border-radius: 12px;
+  background: #FFF;
+  padding: 32px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+.modalTitle {
+  color: #000;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+.modalMessage {
+  color: rgba(0, 0, 0, 0.72);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; 
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+.modal button {
+  margin-top: 20px;
+  border-radius: 4px;
+  background: linear-gradient(45deg, #494BFF 0%, #0B9AFF 100%);
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.20);
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px; 
+}
+.modal a {
+  color: #076AC9;
+  text-align: center;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 20px;
+}
+.modalClose {
+  cursor: pointer;
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  display: block;
+}

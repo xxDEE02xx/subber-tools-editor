@@ -6,6 +6,9 @@
 .pnp.js
 .yarn/install-state.gz
 
+/public/video/meow-episode-1.mp4
+/public/video/meow-episode-2.mp4
+
 # testing
 /coverage
 

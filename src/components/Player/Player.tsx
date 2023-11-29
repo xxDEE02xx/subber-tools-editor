@@ -21,7 +21,7 @@ const Player: FC<PlayerProps> = ({
   const [playing, setPlaying] = useState<boolean>(false)
 
   useEffect(() => {
-    setPosition({ x: window.innerWidth - 725, y: window.innerHeight - 400 })
+    setPosition({ x: window.innerWidth - 789, y: window.innerHeight - 400 })
   }, [])
 
   useEffect(() => {
