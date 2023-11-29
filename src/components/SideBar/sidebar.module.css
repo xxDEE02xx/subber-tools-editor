@@ -62,15 +62,19 @@
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
+  cursor: pointer;
 }
 
 .backToSubberTools {
+  display: flex;
   justify-content: center;
   align-items: center;
   padding: 24px 0;
   position: absolute;
   bottom: 0px;
   background: #000000;
+  margin: 0 -24px;
+  width: 100%;
 }
 .backToSubberTools a {
   background: none;

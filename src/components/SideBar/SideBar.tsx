@@ -12,11 +12,11 @@ import { EpisodeType, PartType } from '@/types/episode'
 
 import { Accordion } from '@/components/Accordion'
 
-const List: FC<ListProps> = ({ items, id }) => {
+const List: FC<ListProps> = ({ items, episodeId, onClick }) => {
   return (
     <ul>
       {items.map((item: PartType, key) => (
-        <li key={`list-${id}-${key}`} className={sidebarStyles.listItem}>
+        <li key={`list-${episodeId}-${key}`} className={sidebarStyles.listItem} onClick={() => onClick(episodeId, item.id)}>
           <Image src={item.isDone ? CheckboxIcon : CheckboxEmptyIcon} height={16} width={15} alt="email icon" />{item.title}
         </li>
       ))}
@@ -24,7 +24,7 @@ const List: FC<ListProps> = ({ items, id }) => {
   )
 }
 
-const SideBar: FC<SideBarProps> = ({ episodes, selectedEpisodeKey }) => {
+const SideBar: FC<SideBarProps> = ({ episodes, selectedEpisodeId, onClick }) => {
   return (
     <div className={sidebarStyles.wrapper}>
       <div className={sidebarStyles.show}>Show</div>
@@ -39,8 +39,8 @@ const SideBar: FC<SideBarProps> = ({ episodes, selectedEpisodeKey }) => {
         const countDoneParts = episode.parts.filter(part => part.isDone).length
         const progress = (countDoneParts / countParts) * 100
         return (
-          <Accordion key={`episode-${episode.id}`} isOpen={key <= selectedEpisodeKey} title={episode.title} progress={progress}>
-            <List id={episode.id} items={episode.parts} />
+          <Accordion key={`episode-${episode.id}`} isOpen={episode.id <= selectedEpisodeId} title={episode.title} progress={progress}>
+            <List episodeId={episode.id} items={episode.parts} onClick={onClick} />
           </Accordion>
         )
       })}
@@ -55,13 +55,15 @@ const SideBar: FC<SideBarProps> = ({ episodes, selectedEpisodeKey }) => {
 }
 
 type ListProps = {
-  id: number;
+  episodeId: number;
   items: PartType[];
+  onClick: (episodeId: number, partId: number) => void
 }
 
 type SideBarProps = {
   episodes: EpisodeType[];
-  selectedEpisodeKey: number;
+  selectedEpisodeId: number;
+  onClick: (episodeId: number, partId: number) => void
 }
 
 export { SideBar }

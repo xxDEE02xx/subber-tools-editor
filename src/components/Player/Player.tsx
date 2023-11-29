@@ -43,17 +43,17 @@ const Player: FC<PlayerProps> = ({
       default={{
         x: position.x,
         y: position.y,
-        width: 500,
-        height: 300,
+        width: shouldShowPlayer ? 500 : 0,
+        height: shouldShowPlayer ? 300 : 0,
       }}
-      minWidth={500}
-      minHeight={300}
+      minWidth={shouldShowPlayer ? 500 : 0}
+      minHeight={shouldShowPlayer ? 300 : 0}
       bounds="parent"
       dragHandleClassName="header-draggable"
     >
       <div className={playerStyles.content} style={{ display: shouldShowPlayer ? 'block' : 'none' }}>
           <h1 className={`header-draggable ${playerStyles.header}`}>
-            <p>Meow~Ears Up!</p>
+            <p>Meow~Ears Up! - Episode {episodeCount}</p>
             <button onClick={onHidePlayer}>close</button>
           </h1>
           <div className={playerStyles.videoWrapper}>

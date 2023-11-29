@@ -26,9 +26,9 @@ import { SubtitlesEditor } from '@/components/SubtitlesEditor'
 
 const OptionUsers = ['Username 1', 'Username 2', 'Username 3']
 
-const Episode: FC<EpisodeProps> = ({ episode, setDone, showAndSeekPlayer }) => {
+const Episode: FC<EpisodeProps> = ({ episode, setDone, setUnDone, showAndSeekPlayer, selectedPartId, isAllDone }) => {
   const contentRef = useRef(null)
-  const selectedPart = episode.parts.find(part => !part.isDone)
+  const selectedPart = episode.parts.find(part => part.id === selectedPartId)
   const lastPart = episode.parts[episode.parts.length - 1]
   const [openAssigned, setOpenAssigned] = useState<boolean>(false)
   const [assignedRef, setAssignedRef] = useState<null | HTMLElement>(null)
@@ -42,8 +42,13 @@ const Episode: FC<EpisodeProps> = ({ episode, setDone, showAndSeekPlayer }) => {
   }
 
   const onConfirmDone = () => {
+    onScrollTop()
     setOpenConfirmDone(false)
     if (selectedPart) setDone(episode.id, selectedPart.id)
+  }
+
+  const onClickUnDone = () => {
+    if (selectedPart) setUnDone(episode.id, selectedPart.id)
   }
 
   const toggleOpenAssigned = (event: React.MouseEvent<HTMLElement>) => {
@@ -64,10 +69,15 @@ const Episode: FC<EpisodeProps> = ({ episode, setDone, showAndSeekPlayer }) => {
   }
 
   useEffect(() => {
-    if (!selectedPart) {
+    if (isAllDone) {
       setTimeout(() => setOpenAllDone(true), 500)
     }
-  }, [selectedPart])
+  }, [isAllDone])
+
+  const episodeId = episode.id
+  useEffect(() => {
+    onScrollTop()
+  }, [episodeId, selectedPartId])
 
   useEffect(() => {
     (contentRef?.current as any).addEventListener('scroll', () => {
@@ -84,7 +94,12 @@ const Episode: FC<EpisodeProps> = ({ episode, setDone, showAndSeekPlayer }) => {
       <div className={episodeStyles.header}>
         <div className={episodeStyles.headerLeft}>
           <h4 className={episodeStyles.title}>{episode.title} {selectedPart?.title || lastPart.title}</h4>
-         {selectedPart && <ButtonBase onClick={onClickDone}>Done</ButtonBase>}
+          {selectedPart?.isDone ? (
+            <>
+              <ButtonBase onClick={onClickUnDone}>Mark undone</ButtonBase>
+              <p className={episodeStyles.completedTime}>Edits were completed on 18 Nov 23, 18:90</p>
+            </>
+          ) : <ButtonBase onClick={onClickDone}>Done</ButtonBase>}
         </div>
         <div className={episodeStyles.headerRight}>
           <label>Assigned to</label>
@@ -121,8 +136,8 @@ const Episode: FC<EpisodeProps> = ({ episode, setDone, showAndSeekPlayer }) => {
         </div>
       </div>
       <div className={episodeStyles.subtitlesWrapper} ref={contentRef}>
-        <SubtitlesEditor showAndSeekPlayer={showAndSeekPlayer} />
-        {selectedPart && (
+        <SubtitlesEditor showAndSeekPlayer={showAndSeekPlayer} isDone={!!selectedPart?.isDone} />
+        {!selectedPart?.isDone && (
           <div className={episodeStyles.doneFooter}>
             <Image src={BlobbySuccessIcon} height={64} width={98} alt="blobby success" />
             <p>Woohoo! You’ve reached the end of Part {selectedPart?.id}!</p>
@@ -206,7 +221,10 @@ const Episode: FC<EpisodeProps> = ({ episode, setDone, showAndSeekPlayer }) => {
 type EpisodeProps = {
   episode: EpisodeType;
   setDone: (episodeId: number, partId: number) => void;
+  setUnDone: (episodeId: number, partId: number) => void;
   showAndSeekPlayer: (value: number) => void;
+  selectedPartId: number;
+  isAllDone: boolean;
 }
 
 export { Episode }
