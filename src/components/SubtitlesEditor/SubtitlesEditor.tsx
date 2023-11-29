@@ -18,6 +18,31 @@ const SubtitlesEditor: FC<SubtitlesEditorProps> = ({showAndSeekPlayer}) => {
         data="this is just a teest"
         duration={{from: 60, to: 70}}
       />
+      <Item
+        showAndSeekPlayer={showAndSeekPlayer}
+        data="this is just a test"
+        duration={{from: 90, to: 95}}
+      />
+      <Item
+        showAndSeekPlayer={showAndSeekPlayer}
+        data="this is just a test"
+        duration={{from: 150, to: 160}}
+      />
+      <Item
+        showAndSeekPlayer={showAndSeekPlayer}
+        data="this is just a test"
+        duration={{from: 230, to: 240}}
+      />
+      <Item
+        showAndSeekPlayer={showAndSeekPlayer}
+        data="this is just a test"
+        duration={{from: 300, to: 320}}
+      />
+      <Item
+        showAndSeekPlayer={showAndSeekPlayer}
+        data="this is just a test"
+        duration={{from: 430, to: 460}}
+      />
     </div>
   )
 }
