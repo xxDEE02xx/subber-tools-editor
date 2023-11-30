@@ -7,6 +7,7 @@ import Paper from '@mui/material/Paper'
 import Fade from '@mui/material/Fade'
 import MenuItem from '@mui/material/MenuItem'
 import MenuList from '@mui/material/MenuList'
+import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 
 import ProfileUser1 from "../../../public/icons/profile.svg"
 import ExpandIcon from "../../../public/icons/expand.svg"
@@ -116,36 +117,38 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
         </div>
         <div className={episodeStyles.headerRight}>
           <label>Assigned to</label>
-          <div>
-              <ButtonBase onClick={toggleOpenAssigned}>
-                <Image src={ProfileUser1} height={24} width={24} alt="User 1 Profile" />
-                <Image src={ExpandIcon} height={16} width={16} alt="expand icon" style={{ marginLeft: '8px' }} />
-              </ButtonBase>
-              <Popper
-                open={openAssigned}
-                anchorEl={assignedRef}
-                placement="bottom-end"
-                transition
-              >
-                {({ TransitionProps }) => (
-                  <Fade {...TransitionProps} timeout={350}>
-                    <Paper>
-                      <MenuList id="split-button-menu" autoFocusItem>
-                        {OptionUsers.map((option, index) => (
-                          <MenuItem
-                            key={option}
-                            selected={index === selectedIndex}
-                            onClick={(event) => handleMenuItemClick(event, index)}
-                          >
-                            <Image src={ProfileUser1} height={24} width={24} alt="User 1 Profile" style={{ marginRight: '16px'}} /> {option}
-                          </MenuItem>
-                        ))}
-                      </MenuList>
-                    </Paper>
-                  </Fade>
-                )}
-              </Popper>
-          </div>
+          <ClickAwayListener onClickAway={() => setOpenAssigned(false)}>
+            <div>
+                <ButtonBase onClick={toggleOpenAssigned}>
+                  <Image src={ProfileUser1} height={24} width={24} alt="User 1 Profile" />
+                  <Image src={ExpandIcon} height={16} width={16} alt="expand icon" style={{ marginLeft: '8px' }} />
+                </ButtonBase>
+                <Popper
+                  open={openAssigned}
+                  anchorEl={assignedRef}
+                  placement="bottom-end"
+                  transition
+                >
+                  {({ TransitionProps }) => (
+                    <Fade {...TransitionProps} timeout={350}>
+                      <Paper>
+                        <MenuList id="split-button-menu" autoFocusItem>
+                          {OptionUsers.map((option, index) => (
+                            <MenuItem
+                              key={option}
+                              selected={index === selectedIndex}
+                              onClick={(event) => handleMenuItemClick(event, index)}
+                            >
+                              <Image src={ProfileUser1} height={24} width={24} alt="User 1 Profile" style={{ marginRight: '16px'}} /> {option}
+                            </MenuItem>
+                          ))}
+                        </MenuList>
+                      </Paper>
+                    </Fade>
+                  )}
+                </Popper>
+              </div>
+            </ClickAwayListener>
         </div>
       </div>
       <div className={episodeStyles.subtitlesWrapper} ref={contentRef}>

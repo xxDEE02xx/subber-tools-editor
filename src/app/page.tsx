@@ -16,14 +16,12 @@ import { Modal } from '@/components/Modal'
 import { useEpisodeStore } from '@/store/episode'
 import { useSubtitleStore } from '@/store/subtitle'
 
-import { EpisodeType } from '@/types/episode'
-
 export default function Home() {
   const [seek, setSeek] = useState<number | null>(null)
   const [shouldShowPlayer, setShouldShowPlayer] = useState<boolean>(false)
   const [openWelcome, setOpenWelcome] = useState<boolean>(false)
 
-  const [episodes, activeEpisodeId, activePartId] = useEpisodeStore((state) => [
+  const [episodes, activeEpisodeId] = useEpisodeStore((state) => [
     state.episodes,
     state.activeEpisodeId,
     state.activePartId,
@@ -42,16 +40,10 @@ export default function Home() {
     setSeek(value)
   }
 
-  const selectedEpisode = episodes.find(episode => episode.id === activeEpisodeId) as EpisodeType
-
-  const isAllDone = !episodes.find(episode => {
-    return !!episode.parts.find(part => !part.isDone)
-  })
-
   return (
     <>
       <MenuBar />
-      {selectedEpisode && activeEpisodeId !== null && activePartId !== null && (
+      {episodes && (
         <>
           <SideBar />
           <div className={pageStyles.container}>
