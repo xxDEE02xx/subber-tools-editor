@@ -18,27 +18,19 @@ const Episodes = [
   {
     id: 1,
     title: 'Episode 1',
-    parts: [
-      {id: 1, isDone: false, title: 'Part 1'},
-      {id: 2, isDone: false, title: 'Part 2'},
-      {id: 3, isDone: false, title: 'Part 3'}
-    ]
+    parts: []
   },
   {
     id: 2,
     title: 'Episode 2',
-    parts: [
-      {id: 1, isDone: false, title: 'Part 1'},
-      {id: 2, isDone: false, title: 'Part 2'},
-      {id: 3, isDone: false, title: 'Part 3'}
-    ]
+    parts: []
   },
 ]
 
 const useEpisodeStore = create<EpisodeState>((set) => ({
   episodes: Episodes,
   activeEpisodeId: Episodes[0].id,
-  activePartId: Episodes[0].parts[0].id,
+  activePartId: 0,
   setActiveEpisodeId: (episodeId) => set((state) => ({ activeEpisodeId: episodeId })),
   setActivePartId: (partId) => set((state) => ({ activePartId: partId })),
   setEpisodes: (episodes) => set((state) => ({ episodes})),
@@ -47,7 +39,7 @@ const useEpisodeStore = create<EpisodeState>((set) => ({
       if (episode.id === episodeId) {
         episode.parts = episode.parts.map(part => {
           if (part.id === partId) {
-            part.isDone = true
+            part.completed = true
           }
           return part
         })
@@ -56,7 +48,7 @@ const useEpisodeStore = create<EpisodeState>((set) => ({
     })
 
     const activeEpisode = state.episodes.find(episode => episode.id === episodeId) as EpisodeType
-    const activeEpisodePartsDone = activeEpisode.parts.filter(part => part.isDone)
+    const activeEpisodePartsDone = activeEpisode.parts.filter(part => part.completed)
 
     let toUpdate:Record<any, any> = {
       episodes: updatedEpisodes
@@ -78,7 +70,7 @@ const useEpisodeStore = create<EpisodeState>((set) => ({
         }
       }
     } else {
-      const notDoneParts = activeEpisode.parts.filter(part => !part.isDone)
+      const notDoneParts = activeEpisode.parts.filter(part => !part.completed)
       if (notDoneParts.length > 0) {
         toUpdate = {
           ...toUpdate,
@@ -94,7 +86,7 @@ const useEpisodeStore = create<EpisodeState>((set) => ({
       if (episode.id === episodeId) {
         episode.parts = episode.parts.map(part => {
           if (part.id === partId) {
-            part.isDone = false
+            part.completed = false
           }
           return part
         })

@@ -6,9 +6,11 @@ import { BubbleMenu, EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import CuteQcIcon from "../../../public/icons/cutesyqc.svg"
 
+import { SuggestionType } from '@/types/suggestion'
+
 import editorStyles from './editor.module.css'
 
-const Editor: FC<EditorProps> = ({ data, onChange }) => {
+const Editor: FC<EditorProps> = ({ data, onChange, suggestions }) => {
   const [withRecommendation, setWithRecommendation] = useState<boolean>(true)
   const editor = useEditor({
     extensions: [
@@ -86,25 +88,31 @@ const Editor: FC<EditorProps> = ({ data, onChange }) => {
       <div className={editorStyles.editorCount}>
         {isFocused && `${editorTextContent?.length || 0} / 5000`}
       </div>
-      {withRecommendation && (
-        <div className={editorStyles.recommendation}>
+      {withRecommendation && suggestions && suggestions.map(suggestion => (
+        <div className={editorStyles.recommendation} key={`suggestion-${suggestion.segmentId}-${suggestion.id}`}>
           <div className={editorStyles.recommendationLeft}>
             <Image src={CuteQcIcon} height={24} width={24} alt="cute qc icon" />
-            <p>This scene may contain lyrics, please format the sentence using “🎵” symbol</p>
+            <p>
+              {suggestion.type === 'lyric' ?
+                'This scene may contain lyrics, please format the sentence using "🎵" symbol' :
+                'This scene may contain flashbacks, please italicise the sentence using “<i>...</i>”'
+              }
+            </p>
           </div>
           <div className={editorStyles.recommendationRight}>
             <button onClick={applyRecommnedation}>Apply</button>
             <button onClick={() => setWithRecommendation(false)}>Ignore</button>
           </div>
         </div>
-      )}
+      ))}
     </div>
   )
 }
 
 interface EditorProps {
-  data: string
-  onChange?: (data: string) => void
+  data: string;
+  onChange?: (data: string) => void;
+  suggestions?: SuggestionType[]
 }
 
 export { Editor }

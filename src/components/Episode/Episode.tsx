@@ -39,7 +39,7 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
   ])
   const activeEpisode = episodes.find(episode => episode.id === activeEpisodeId) as EpisodeType
   const isAllDone = !episodes.find(episode => {
-    return !!episode.parts.find(part => !part.isDone)
+    return !!episode.parts.find(part => !part.completed)
   })
 
   const selectedPart = activeEpisode.parts.find(part => part.id === activePartId)
@@ -108,7 +108,7 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
       <div className={episodeStyles.header}>
         <div className={episodeStyles.headerLeft}>
           <h4 className={episodeStyles.title}>{activeEpisode.title} {selectedPart?.title || lastPart.title}</h4>
-          {selectedPart?.isDone ? (
+          {selectedPart?.completed ? (
             <>
               <ButtonBase onClick={onClickUnDone}>Mark undone</ButtonBase>
               <p className={episodeStyles.completedTime}>Edits were completed on 18 Nov 23, 18:90</p>
@@ -152,8 +152,8 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
         </div>
       </div>
       <div className={episodeStyles.subtitlesWrapper} ref={contentRef}>
-        <SubtitlesEditor showAndSeekPlayer={showAndSeekPlayer} isDone={!!selectedPart?.isDone} />
-        {!selectedPart?.isDone && (
+        <SubtitlesEditor showAndSeekPlayer={showAndSeekPlayer} completed={!!selectedPart?.completed} />
+        {!selectedPart?.completed && (
           <div className={episodeStyles.doneFooter}>
             <Image src={BlobbySuccessIcon} height={64} width={98} alt="blobby success" />
             <p>Woohoo! You’ve reached the end of Part {selectedPart?.id}!</p>

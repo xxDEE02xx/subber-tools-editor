@@ -27,7 +27,7 @@ const List: FC<ListProps> = ({ items, episodeId, onClick }) => {
           className={`${sidebarStyles.listItem} ${episodeId === activeEpisodeId && item.id === activePartId && sidebarStyles.listItemActive}`}
           onClick={() => onClick(episodeId, item.id)}
         >
-          <Image src={item.isDone ? CheckboxIcon : CheckboxEmptyIcon} height={16} width={15} alt="email icon" />{item.title}
+          <Image src={item.completed ? CheckboxIcon : CheckboxEmptyIcon} height={16} width={15} alt="email icon" />{item.title}
         </li>
       ))}
     </ul>
@@ -57,7 +57,7 @@ const SideBar: FC = () => {
       <hr className={sidebarStyles.divider} />
       {episodes.map((episode, key) => {
         const countParts = episode.parts.length
-        const countDoneParts = episode.parts.filter(part => part.isDone).length
+        const countDoneParts = episode.parts.filter(part => part.completed).length
         const progress = (countDoneParts / countParts) * 100
         return (
           <Accordion key={`episode-${episode.id}`} isOpen={true} title={episode.title} progress={progress}>

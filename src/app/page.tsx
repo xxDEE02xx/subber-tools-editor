@@ -15,25 +15,109 @@ import { Modal } from '@/components/Modal'
 
 import { useEpisodeStore } from '@/store/episode'
 import { useSubtitleStore } from '@/store/subtitle'
+import { useSegmentStore } from '@/store/segment'
+
+import { useFetch } from "@/store/useFetch"
 
 export default function Home() {
   const [seek, setSeek] = useState<number | null>(null)
   const [shouldShowPlayer, setShouldShowPlayer] = useState<boolean>(false)
   const [openWelcome, setOpenWelcome] = useState<boolean>(false)
 
-  const [episodes, activeEpisodeId] = useEpisodeStore((state) => [
+  const episode1Parts = useFetch("http://localhost:8080/v4/videos/1240611v/parts.json")
+  const episode2Parts = useFetch("http://localhost:8080/v4/videos/1244150v/parts.json")
+  const segment1 = useFetch("http://localhost:8080/v4/videos/1240611v/segments.json")
+  const segment2 = useFetch("http://localhost:8080/v4/videos/1244150v/segments.json")
+
+  const [episodes, activeEpisodeId, activePartId, setEpisodes, setActivePartId] = useEpisodeStore((state) => [
     state.episodes,
     state.activeEpisodeId,
     state.activePartId,
+    state.setEpisodes,
+    state.setActivePartId,
   ])
 
   const [subtitles] = useSubtitleStore((state) => [
     state.subtitles,
   ])
 
+  const [segments, setSegments] = useSegmentStore((state) => [
+    state.segments,
+    state.setSegments,
+  ])
+
   useEffect(() => {
     setOpenWelcome(true)
   }, [])
+
+  useEffect(() => {
+    if (episode1Parts && episode2Parts) {
+      const newEpisodes = episodes.map(episode => {
+        return {
+          ...episode,
+          parts: (episode.id === 1 ? (episode1Parts as any).video_parts : (episode2Parts as any).video_parts as []).map((part: Record<string, any>) => ({
+            id: part.id,
+            completed: part.completed,
+            title: `Part ${part.number}`,
+            startTime: part.start_time,
+            endTime: part.end_time,
+            number: part.number,
+          }))
+        }
+      })
+      setEpisodes(newEpisodes)
+      setActivePartId((episode1Parts as any).video_parts[0].id)
+    }
+  }, [episode1Parts, episode2Parts]);
+
+  useEffect(() => {
+    if (segment1 && segment2) {
+      setSegments({
+        1: (segment1 as any).segments.map((segment: any) => ({
+            id: segment.id,
+            userId: segment.user_id,
+            videoId: segment.video_id,
+            startTime: segment.start_time,
+            endTime: segment.end_time,
+            subtitle: {
+              id: segment.subtitle.id,
+              userId: segment.subtitle.user_id,
+              videoId: segment.subtitle.video_id,
+              segmentId: segment.subtitle.segment_id,
+              languageCode: segment.subtitle.language_code,
+              content: segment.subtitle.content,
+            },
+            suggestions: segment.subtitle_suggestions && segment.subtitle_suggestions.map((suggestion: any) => ({
+              id: suggestion.id,
+              segmentId: suggestion.segment_id,
+              subtitleId: suggestion.subtitle_id,
+              type: suggestion.type,
+            })),
+          })),
+        2: (segment2 as any).segments.map((segment: any) => ({
+          id: segment.id,
+          userId: segment.user_id,
+          videoId: segment.video_id,
+          startTime: segment.start_time,
+          endTime: segment.end_time,
+          subtitle: {
+            id: segment.subtitle.id,
+            userId: segment.subtitle.user_id,
+            videoId: segment.subtitle.video_id,
+            segmentId: segment.subtitle.segment_id,
+            languageCode: segment.subtitle.language_code,
+            content: segment.subtitle.content,
+          },
+          suggestions: segment.subtitle_suggestions && segment.subtitle_suggestions.map((suggestion: any) => ({
+            id: suggestion.id,
+            segmentId: suggestion.segment_id,
+            subtitleId: suggestion.subtitle_id,
+            type: suggestion.type,
+          })),
+        })),
+      })
+    }
+  }, [segment1, segment2]);
 
   const showAndSeekPlayer = (value: number) => {
     setShouldShowPlayer(true)
@@ -43,7 +127,7 @@ export default function Home() {
   return (
     <>
       <MenuBar />
-      {episodes && (
+      {episodes && segments && activePartId && (
         <>
           <SideBar />
           <div className={pageStyles.container}>
@@ -52,7 +136,6 @@ export default function Home() {
             />
             <Player
               seek={seek}
-              subtitles={subtitles}
               shouldShowPlayer={shouldShowPlayer}
               hidePlayer={() => setShouldShowPlayer(false)}
               episodeCount={activeEpisodeId}

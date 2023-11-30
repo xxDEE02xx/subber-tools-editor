@@ -1,62 +1,58 @@
 'use client'
-import React, { FC } from 'react'
+import React, { FC, useMemo } from 'react'
+
+import { useSegmentStore } from '@/store/segment'
+import { useEpisodeStore } from '@/store/episode'
+
+import { EpisodeType, PartType } from '@/types/episode'
 
 import subtitlesEditorStyles from './subtitlesEditor.module.css'
 
 import { Item } from './Item'
 
-const SubtitlesEditor: FC<SubtitlesEditorProps> = ({ showAndSeekPlayer, isDone}) => {
+const SubtitlesEditor: FC<SubtitlesEditorProps> = ({ showAndSeekPlayer, completed}) => {
+  const [episodes, activeEpisodeId, activePartId] = useEpisodeStore((state) => [
+    state.episodes,
+    state.activeEpisodeId,
+    state.activePartId,
+  ])
+  const [segments] = useSegmentStore((state) => [
+    state.segments,
+  ])
+
+  const segmentsByPart = useMemo(() => {
+    const activeSegments = segments[activeEpisodeId]
+    if (activeSegments) {
+      const activeEpisode = episodes.find(episode => episode.id === activeEpisodeId) as EpisodeType
+      const activeParts = activeEpisode.parts.find(part => part.id === activePartId) as PartType
+
+      return activeSegments.filter(segment => {
+        return segment.startTime >= activeParts.startTime && segment.endTime <= activeParts.endTime
+      })
+    }
+    return []
+
+  }, [activeEpisodeId, activePartId, segments])
+
   return (
     <div className={subtitlesEditorStyles.wrapper}>
-      <Item
-        showAndSeekPlayer={showAndSeekPlayer}
-        data="Val rocks!"
-        duration={{from: 30, to: 40}}
-        isDone={isDone}
-      />
-      <Item
-        showAndSeekPlayer={showAndSeekPlayer}
-        data="this is just a teest"
-        duration={{from: 60, to: 70}}
-        isDone={isDone}
-      />
-      <Item
-        showAndSeekPlayer={showAndSeekPlayer}
-        data="this is just a test"
-        duration={{from: 90, to: 95}}
-        isDone={isDone}
-      />
-      <Item
-        showAndSeekPlayer={showAndSeekPlayer}
-        data="this is just a test"
-        duration={{from: 150, to: 160}}
-        isDone={isDone}
-      />
-      <Item
-        showAndSeekPlayer={showAndSeekPlayer}
-        data="this is just a test"
-        duration={{from: 230, to: 240}}
-        isDone={isDone}
-      />
-      <Item
-        showAndSeekPlayer={showAndSeekPlayer}
-        data="this is just a test"
-        duration={{from: 300, to: 320}}
-        isDone={isDone}
-      />
-      <Item
-        showAndSeekPlayer={showAndSeekPlayer}
-        data="this is just a test"
-        duration={{from: 430, to: 460}}
-        isDone={isDone}
-      />
+      {segmentsByPart.map(segment => (
+        <Item
+          key={`segment-part-subtitle-${segment.id}`}
+          showAndSeekPlayer={showAndSeekPlayer}
+          data={segment.subtitle.content}
+          duration={{from: (segment.startTime / 1000), to: (segment.endTime / 1000)}}
+          completed={completed}
+          suggestions={segment.suggestions}
+        />
+      ))}
     </div>
   )
 }
 
 type SubtitlesEditorProps = {
   showAndSeekPlayer: (value: number) => void;
-  isDone: boolean;
+  completed: boolean;
 }
 
 export { SubtitlesEditor }

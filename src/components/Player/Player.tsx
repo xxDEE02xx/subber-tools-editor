@@ -1,9 +1,12 @@
 'use client'
-import React, { FC, useEffect, useState, useRef } from 'react'
+import React, { FC, useEffect, useState, useRef, useMemo } from 'react'
 import { Rnd } from "react-rnd"
 import ReactPlayer from 'react-player/file'
 
-import { SubType } from '@/types/subtitle'
+import { useSegmentStore } from '@/store/segment'
+import { useEpisodeStore } from '@/store/episode'
+
+import { EpisodeType, PartType } from '@/types/episode'
 
 import playerStyles from './player.module.css'
 
@@ -11,7 +14,6 @@ import { Subtitle } from './Subtitle'
 
 const Player: FC<PlayerProps> = ({
   seek,
-  subtitles,
   shouldShowPlayer,
   hidePlayer,
   episodeCount
@@ -35,6 +37,29 @@ const Player: FC<PlayerProps> = ({
     setPlaying(false)
     hidePlayer()
   }
+
+  const [episodes, activeEpisodeId, activePartId] = useEpisodeStore((state) => [
+    state.episodes,
+    state.activeEpisodeId,
+    state.activePartId,
+  ])
+  const [segments] = useSegmentStore((state) => [
+    state.segments,
+  ])
+
+  const segmentsByPart = useMemo(() => {
+    const activeSegments = segments[activeEpisodeId]
+    if (activeSegments) {
+      const activeEpisode = episodes.find(episode => episode.id === activeEpisodeId) as EpisodeType
+      const activeParts = activeEpisode.parts.find(part => part.id === activePartId) as PartType
+
+      return activeSegments.filter(segment => {
+        return segment.startTime >= activeParts.startTime && segment.endTime <= activeParts.endTime
+      })
+    }
+    return []
+
+  }, [activeEpisodeId, activePartId, segments])
 
   if (position.x === 0) return null
 
@@ -69,7 +94,7 @@ const Player: FC<PlayerProps> = ({
                 onError={e => console.log('onError', e)}
                 playing={playing}
               />
-              <Subtitle playerRef={playerRef} subtitles={subtitles} />
+              <Subtitle playerRef={playerRef} segments={segmentsByPart} />
             </div>
           </div>
       </div>
@@ -79,7 +104,6 @@ const Player: FC<PlayerProps> = ({
 
 type PlayerProps = {
   seek: number | null;
-  subtitles: SubType[];
   shouldShowPlayer?: boolean;
   hidePlayer: () => void;
   episodeCount: number;

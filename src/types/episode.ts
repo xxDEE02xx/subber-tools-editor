@@ -1,7 +1,10 @@
 export type PartType = {
   id: number;
-  isDone: boolean;
+  completed: boolean;
   title: string;
+  startTime: number;
+  endTime: number;
+  number: number;
 }
 
 export type EpisodeType = {
