@@ -7,8 +7,6 @@ import Paper from '@mui/material/Paper'
 import Fade from '@mui/material/Fade'
 import MenuItem from '@mui/material/MenuItem'
 import MenuList from '@mui/material/MenuList'
-import Backdrop from '@mui/material/Backdrop'
-import Modal from '@mui/material/Modal'
 
 import ProfileUser1 from "../../../public/icons/profile.svg"
 import ExpandIcon from "../../../public/icons/expand.svg"
@@ -16,20 +14,35 @@ import UpIcon from "../../../public/icons/up.svg"
 import BlobbySuccessIcon from "../../../public/icons/blobbySuccess.svg"
 import BlobbyCheckIcon from "../../../public/icons/blobbyCheck.svg"
 import ForwardArrowIcon from "../../../public/icons/forwardArrow.svg"
-import CloseIcon from "../../../public/icons/close.svg"
 
 import episodeStyles from './episode.module.css'
 
+import { useEpisodeStore } from '@/store/episode'
+
 import { EpisodeType } from '@/types/episode'
 
-import { SubtitlesEditor } from '@/components/SubtitlesEditor'
+import { SubtitlesEditor } from '@/components/Episode/SubtitlesEditor'
+import { Modal } from '@/components/Modal'
 
 const OptionUsers = ['Username 1', 'Username 2', 'Username 3']
 
-const Episode: FC<EpisodeProps> = ({ episode, setDone, setUnDone, showAndSeekPlayer, selectedPartId, isAllDone }) => {
+const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
   const contentRef = useRef(null)
-  const selectedPart = episode.parts.find(part => part.id === selectedPartId)
-  const lastPart = episode.parts[episode.parts.length - 1]
+
+  const [episodes, activeEpisodeId, activePartId, setDone, setUnDone] = useEpisodeStore((state) => [
+    state.episodes,
+    state.activeEpisodeId,
+    state.activePartId,
+    state.setDone,
+    state.setUnDone
+  ])
+  const activeEpisode = episodes.find(episode => episode.id === activeEpisodeId) as EpisodeType
+  const isAllDone = !episodes.find(episode => {
+    return !!episode.parts.find(part => !part.isDone)
+  })
+
+  const selectedPart = activeEpisode.parts.find(part => part.id === activePartId)
+  const lastPart = activeEpisode.parts[activeEpisode.parts.length - 1]
   const [openAssigned, setOpenAssigned] = useState<boolean>(false)
   const [assignedRef, setAssignedRef] = useState<null | HTMLElement>(null)
   const [selectedIndex, setSelectedIndex] = useState<number>(0)
@@ -44,11 +57,11 @@ const Episode: FC<EpisodeProps> = ({ episode, setDone, setUnDone, showAndSeekPla
   const onConfirmDone = () => {
     onScrollTop()
     setOpenConfirmDone(false)
-    if (selectedPart) setDone(episode.id, selectedPart.id)
+    if (selectedPart) setDone(activeEpisode.id, selectedPart.id)
   }
 
   const onClickUnDone = () => {
-    if (selectedPart) setUnDone(episode.id, selectedPart.id)
+    if (selectedPart) setUnDone(activeEpisode.id, selectedPart.id)
   }
 
   const toggleOpenAssigned = (event: React.MouseEvent<HTMLElement>) => {
@@ -74,10 +87,10 @@ const Episode: FC<EpisodeProps> = ({ episode, setDone, setUnDone, showAndSeekPla
     }
   }, [isAllDone])
 
-  const episodeId = episode.id
+  const episodeId = activeEpisode.id
   useEffect(() => {
     onScrollTop()
-  }, [episodeId, selectedPartId])
+  }, [episodeId, activePartId])
 
   useEffect(() => {
     (contentRef?.current as any).addEventListener('scroll', () => {
@@ -93,7 +106,7 @@ const Episode: FC<EpisodeProps> = ({ episode, setDone, setUnDone, showAndSeekPla
     <div className={episodeStyles.wrapper}>
       <div className={episodeStyles.header}>
         <div className={episodeStyles.headerLeft}>
-          <h4 className={episodeStyles.title}>{episode.title} {selectedPart?.title || lastPart.title}</h4>
+          <h4 className={episodeStyles.title}>{activeEpisode.title} {selectedPart?.title || lastPart.title}</h4>
           {selectedPart?.isDone ? (
             <>
               <ButtonBase onClick={onClickUnDone}>Mark undone</ButtonBase>
@@ -147,84 +160,41 @@ const Episode: FC<EpisodeProps> = ({ episode, setDone, setUnDone, showAndSeekPla
         {showTopBtn && <div className={episodeStyles.goUp} onClick={onScrollTop}><Image src={UpIcon} height={20} width={20} alt="up icon" /></div>}
       </div>
 
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={openConfirmDone}
-        onClose={() => setOpenConfirmDone(false)}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
-      >
-        <Fade in={openConfirmDone}>
-          <div className={episodeStyles.modal}>
-            <span className={episodeStyles.modalClose} onClick={() => setOpenConfirmDone(false)}>
-              <Image src={CloseIcon} width={11} height={11} alt="close modal" />
-            </span>
-            <Image src={BlobbyCheckIcon} height={77} width={109} alt="blobby check" />
-            <p className={episodeStyles.modalTitle}>
-              Done! You finished editing Part {selectedPart?.id} within 10mins
-            </p>
-            <p className={episodeStyles.modalMessage}>
-              Blobby is happy to help you make more efficient edits,<br />keep up the quality work!
-            </p>
-            <ButtonBase onClick={onConfirmDone}>
-              Continue next part
-              <Image src={ForwardArrowIcon} height={24} width={24} alt="blobby check" />
-            </ButtonBase>
-          </div>
-        </Fade>
+      <Modal isOpen={openConfirmDone}>
+        <Image src={BlobbyCheckIcon} height={77} width={109} alt="blobby check" />
+        <p className={episodeStyles.modalTitle}>
+          Done! You finished editing Part {selectedPart?.id} within 10mins
+        </p>
+        <p className={episodeStyles.modalMessage}>
+          Blobby is happy to help you make more efficient edits,<br />keep up the quality work!
+        </p>
+        <ButtonBase onClick={onConfirmDone}>
+          Continue next part
+          <Image src={ForwardArrowIcon} height={24} width={24} alt="blobby check" />
+        </ButtonBase>
       </Modal>
 
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={openAllDone}
-        onClose={() => setOpenAllDone(false)}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
-      >
-        <Fade in={openAllDone}>
-          <div className={episodeStyles.modal}>
-            <span className={episodeStyles.modalClose} onClick={() => setOpenAllDone(false)}>
-              <Image src={CloseIcon} width={11} height={11} alt="close modal" />
-            </span>
-            <Image src={BlobbyCheckIcon} height={77} width={109} alt="blobby check" />
-            <p className={episodeStyles.modalTitle}>
-              Hoorah! All episodes of Marry Me are edited
-            </p>
-            <p className={episodeStyles.modalMessage}>
-              Blobby is already excited to hop on your next editing<br />journey!
-            </p>
-            <ButtonBase>
-              Share this milestone with the Team!
-            </ButtonBase>
-            <a href="https://subber.viki.com/translations/1240611">
-              Back to Subber Tool
-            </a>
-          </div>
-        </Fade>
+      <Modal isOpen={openAllDone}>
+        <Image src={BlobbyCheckIcon} height={77} width={109} alt="blobby check" />
+        <p className={episodeStyles.modalTitle}>
+          Hoorah! All episodes of Marry Me are edited
+        </p>
+        <p className={episodeStyles.modalMessage}>
+          Blobby is already excited to hop on your next editing<br />journey!
+        </p>
+        <ButtonBase>
+          Share this milestone with the Team!
+        </ButtonBase>
+        <a href="https://subber.viki.com/translations/1240611">
+          Back to Subber Tool
+        </a>
       </Modal>
     </div>
   )
 }
 
 type EpisodeProps = {
-  episode: EpisodeType;
-  setDone: (episodeId: number, partId: number) => void;
-  setUnDone: (episodeId: number, partId: number) => void;
   showAndSeekPlayer: (value: number) => void;
-  selectedPartId: number;
-  isAllDone: boolean;
 }
 
 export { Episode }

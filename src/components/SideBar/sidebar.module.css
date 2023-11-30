@@ -64,6 +64,10 @@
   line-height: 24px;
   cursor: pointer;
 }
+.listItemActive,
+.listItem:hover  {
+  color: #2a8bd1;
+}
 
 .backToSubberTools {
   display: flex;

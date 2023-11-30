@@ -8,15 +8,25 @@ import CheckboxIcon from "../../../public/icons/checkbox.svg"
 import CheckboxEmptyIcon from "../../../public/icons/checkboxEmpty.svg"
 import BackIcon from "../../../public/icons/back.svg"
 
-import { EpisodeType, PartType } from '@/types/episode'
+import { useEpisodeStore } from '@/store/episode'
+
+import { PartType } from '@/types/episode'
 
 import { Accordion } from '@/components/Accordion'
 
 const List: FC<ListProps> = ({ items, episodeId, onClick }) => {
+  const [activeEpisodeId, activePartId] = useEpisodeStore((state) => [
+    state.activeEpisodeId,
+    state.activePartId
+  ])
   return (
     <ul>
       {items.map((item: PartType, key) => (
-        <li key={`list-${episodeId}-${key}`} className={sidebarStyles.listItem} onClick={() => onClick(episodeId, item.id)}>
+        <li
+          key={`list-${episodeId}-${key}`}
+          className={`${sidebarStyles.listItem} ${episodeId === activeEpisodeId && item.id === activePartId && sidebarStyles.listItemActive}`}
+          onClick={() => onClick(episodeId, item.id)}
+        >
           <Image src={item.isDone ? CheckboxIcon : CheckboxEmptyIcon} height={16} width={15} alt="email icon" />{item.title}
         </li>
       ))}
@@ -24,7 +34,18 @@ const List: FC<ListProps> = ({ items, episodeId, onClick }) => {
   )
 }
 
-const SideBar: FC<SideBarProps> = ({ episodes, selectedEpisodeId, onClick }) => {
+const SideBar: FC = () => {
+  const [episodes, setActiveEpisodeId, setActivePartId] = useEpisodeStore((state) => [
+    state.episodes,
+    state.setActiveEpisodeId,
+    state.setActivePartId,
+  ])
+
+  const onClick = (episodeId: number, partId: number) => {
+    setActiveEpisodeId(episodeId)
+    setActivePartId(partId)
+  }
+
   return (
     <div className={sidebarStyles.wrapper}>
       <div className={sidebarStyles.show}>Show</div>
@@ -39,7 +60,7 @@ const SideBar: FC<SideBarProps> = ({ episodes, selectedEpisodeId, onClick }) => 
         const countDoneParts = episode.parts.filter(part => part.isDone).length
         const progress = (countDoneParts / countParts) * 100
         return (
-          <Accordion key={`episode-${episode.id}`} isOpen={episode.id <= selectedEpisodeId} title={episode.title} progress={progress}>
+          <Accordion key={`episode-${episode.id}`} isOpen={true} title={episode.title} progress={progress}>
             <List episodeId={episode.id} items={episode.parts} onClick={onClick} />
           </Accordion>
         )
@@ -57,12 +78,6 @@ const SideBar: FC<SideBarProps> = ({ episodes, selectedEpisodeId, onClick }) => 
 type ListProps = {
   episodeId: number;
   items: PartType[];
-  onClick: (episodeId: number, partId: number) => void
-}
-
-type SideBarProps = {
-  episodes: EpisodeType[];
-  selectedEpisodeId: number;
   onClick: (episodeId: number, partId: number) => void
 }
 

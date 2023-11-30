@@ -1,0 +1,65 @@
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  border-radius: 12px;
+  background: #FFF;
+  padding: 32px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  outline: none;
+}
+.modalTitle {
+  color: #000;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+.modalMessage {
+  color: rgba(0, 0, 0, 0.72);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; 
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+.modal button {
+  margin-top: 20px;
+  border-radius: 4px;
+  background: linear-gradient(45deg, #494BFF 0%, #0B9AFF 100%);
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.20);
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px; 
+}
+.modal a {
+  color: #076AC9;
+  text-align: center;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 20px;
+}
+.modalClose {
+  cursor: pointer;
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  display: block;
+}
