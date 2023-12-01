@@ -44,6 +44,8 @@ const SubtitlesEditor: FC<SubtitlesEditorProps> = ({ showAndSeekPlayer, complete
           duration={{from: (segment.startTime / 1000), to: (segment.endTime / 1000)}}
           completed={completed}
           suggestions={segment.suggestions}
+          segmentId={segment.id}
+          history={segment.subtitle.history}
         />
       ))}
     </div>

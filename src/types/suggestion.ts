@@ -3,4 +3,7 @@ export type SuggestionType = {
   segmentId: number;
   subtitleId: number;
   type: string;
+  oldContent: string;
+  newContent: string;
+  diffContent: string;
 }

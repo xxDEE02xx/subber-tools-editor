@@ -5,4 +5,5 @@ export type SubtitleType = {
   segmentId: number;
   languageCode: string;
   content: string;
+  history: string[];
 }

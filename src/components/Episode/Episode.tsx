@@ -7,7 +7,7 @@ import Paper from '@mui/material/Paper'
 import Fade from '@mui/material/Fade'
 import MenuItem from '@mui/material/MenuItem'
 import MenuList from '@mui/material/MenuList'
-import { ClickAwayListener } from '@mui/base/ClickAwayListener';
+import { ClickAwayListener } from '@mui/base/ClickAwayListener'
 
 import ProfileUser1 from "../../../public/icons/profile.svg"
 import ExpandIcon from "../../../public/icons/expand.svg"
@@ -79,7 +79,7 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
   }
 
   const onScrollTop = () => {
-    (contentRef?.current as any).scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => (contentRef?.current as any).scrollTo({ top: 0, behavior: 'smooth' }), 500)
   }
 
   useEffect(() => {
@@ -93,15 +93,16 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
     onScrollTop()
   }, [episodeId, activePartId])
 
-  useEffect(() => {
-    (contentRef?.current as any).addEventListener('scroll', () => {
-      if ((contentRef?.current as any).scrollTop > 200) {
-        setShowTopBtn(true);
-      } else {
-        setShowTopBtn(false);
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   (contentRef?.current as any).addEventListener('scroll', () => {
+  //     if ((contentRef?.current as any).scrollTop > 200) {
+  //       setShowTopBtn(value => !value ? true : value);
+  //     }
+  //     if ((contentRef?.current as any).scrollTop < 200) {
+  //       setShowTopBtn(value => value ? false : value);
+  //     }
+  //   });
+  // }, []);
 
   return (
     <div className={episodeStyles.wrapper}>

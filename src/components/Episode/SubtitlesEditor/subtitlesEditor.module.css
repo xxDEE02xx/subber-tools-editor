@@ -80,8 +80,37 @@
 .actions button:active span {
   color: #FFFFFF;
 }
-.actions button:active img {
-  filter: invert(1);
+
+
+.btnDisabled {
+  padding: 4px 0 4px 10px;
+}
+.btnDisabled .icon svg path {
+  fill: #00000040;
+}
+.actions .btnDisabled:hover {
+  background: none;
+  padding: 4px 0 4px 10px;
+}
+.actions .btnDisabled:hover .icon svg path {
+  fill: #00000040;
+}
+.actions .btnDisabled:hover span {
+  display: none;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+}
+.icon svg path {
+  fill: #00000080;
+}
+.actions button:hover .icon svg path {
+  fill: #076AC9;
+}
+.actions button:active .icon svg path {
+  fill: #FFFFFF;
 }
 
 .doneData {
@@ -92,4 +121,110 @@
   line-height: 24px;
   padding: 0;
   margin: 0;
+}
+
+.history {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  border: 1px solid #C4C3C4;
+  background: #FFF;
+  border-radius: 6px;
+  z-index: 20;
+}
+.history h5 {
+  display: flex;
+  padding: 18px 20px;
+  gap: 8px;
+  justify-content: flex-start;
+  align-content: center;
+}
+.history h5 div {
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+.history h5 div svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+.history h5 span {
+  color: rgba(0, 0, 0, 0.55);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 20px;
+}
+.historyList {
+  max-height: 180px;
+  overflow: auto;
+}
+.historyItem {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.22);
+  padding: 12px 20px;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+.historyItem:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+.historyItem p {
+  color: #000;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; 
+}
+
+.historyItemUser {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.historyItemUserProfile {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: #D9D9D9;
+  border-radius: 50%;
+}
+.historyItemUserUsername {
+  display: block;
+  color: rgba(0, 0, 0, 0.72);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  padding-right: 10px;
+}
+.historyItemUserTime {
+  display: block;
+  color: rgba(0, 0, 0, 0.72);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.grammarError {
+  color: #FF4343;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px;
+  text-decoration-line: line-through;
+}
+.grammarSuggestion {
+  color: #17AAA3;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px;
 }
