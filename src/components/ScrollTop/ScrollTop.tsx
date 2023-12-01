@@ -1,9 +1,12 @@
 'use client'
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect, MutableRefObject } from 'react'
+import Image from 'next/image'
+
+import UpIcon from "../../../public/icons/up.svg"
 
 import scrollTopStyles from './scrolltop.module.css'
 
-const ScrollTop: FC = ({ contentRef }: any) => {
+const ScrollTop: FC<ScrollTopProps> = ({ contentRef, onScrollTop }: any) => {
   const [open, setOpen] = useState<boolean>(false)
 
   useEffect(() => {
@@ -18,10 +21,17 @@ const ScrollTop: FC = ({ contentRef }: any) => {
   }, []);
 
   if (!open) return null
-  return null
-  // return (
-  //   <div className={scrollTopStyles.goUp} onClick={onScrollTop}><Image src={UpIcon} height={20} width={20} alt="up icon" />
-  // )
+
+  return (
+    <div className={scrollTopStyles.goUp} onClick={onScrollTop}>
+      <Image src={UpIcon} height={20} width={20} alt="up icon" />
+    </div>
+  )
+}
+
+type ScrollTopProps = {
+  contentRef: any;
+  onScrollTop: () => void;
 }
 
 export { ScrollTop }

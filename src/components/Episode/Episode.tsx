@@ -11,7 +11,6 @@ import { ClickAwayListener } from '@mui/base/ClickAwayListener'
 
 import ProfileUser1 from "../../../public/icons/profile.svg"
 import ExpandIcon from "../../../public/icons/expand.svg"
-import UpIcon from "../../../public/icons/up.svg"
 import BlobbySuccessIcon from "../../../public/icons/blobbySuccess.svg"
 import BlobbyCheckIcon from "../../../public/icons/blobbyCheck.svg"
 import ForwardArrowIcon from "../../../public/icons/forwardArrow.svg"
@@ -23,6 +22,7 @@ import { useEpisodeStore } from '@/store/episode'
 import { EpisodeType } from '@/types/episode'
 
 import { SubtitlesEditor } from '@/components/Episode/SubtitlesEditor'
+import { ScrollTop } from '@/components/ScrollTop/ScrollTop'
 import { Modal } from '@/components/Modal'
 
 const OptionUsers = ['Username 1', 'Username 2', 'Username 3']
@@ -79,7 +79,7 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
   }
 
   const onScrollTop = () => {
-    setTimeout(() => (contentRef?.current as any).scrollTo({ top: 0, behavior: 'smooth' }), 500)
+    (contentRef?.current as any).scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   useEffect(() => {
@@ -92,17 +92,6 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
   useEffect(() => {
     onScrollTop()
   }, [episodeId, activePartId])
-
-  // useEffect(() => {
-  //   (contentRef?.current as any).addEventListener('scroll', () => {
-  //     if ((contentRef?.current as any).scrollTop > 200) {
-  //       setShowTopBtn(value => !value ? true : value);
-  //     }
-  //     if ((contentRef?.current as any).scrollTop < 200) {
-  //       setShowTopBtn(value => value ? false : value);
-  //     }
-  //   });
-  // }, []);
 
   return (
     <div className={episodeStyles.wrapper}>
@@ -161,7 +150,7 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
             <ButtonBase onClick={onClickDone}>Mark done</ButtonBase>
           </div>
         )}
-        {showTopBtn && <div className={episodeStyles.goUp} onClick={onScrollTop}><Image src={UpIcon} height={20} width={20} alt="up icon" /></div>}
+        <ScrollTop contentRef={contentRef} onScrollTop={onScrollTop} />
       </div>
 
       <Modal isOpen={openConfirmDone}>
