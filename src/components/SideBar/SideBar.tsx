@@ -52,7 +52,7 @@ const SideBar: FC = () => {
       <div className={sidebarStyles.title}>Meow~Ears Up!</div>
       <ul className={sidebarStyles.nav}>
         <li>Team notes</li>
-        <li>Editing shortcuts</li>
+        <li>Edit shortcuts</li>
       </ul>
       <hr className={sidebarStyles.divider} />
       {episodes.map((episode, key) => {

@@ -145,7 +145,7 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
         <SubtitlesEditor showAndSeekPlayer={showAndSeekPlayer} completed={!!selectedPart?.completed} />
         {!selectedPart?.completed && (
           <div className={episodeStyles.doneFooter}>
-            <Image src={BlobbySuccessIcon} height={64} width={98} alt="blobby success" />
+            <Image src={BlobbySuccessIcon} height={54} width={86} alt="blobby success" />
             <p>Woohoo! You’ve reached the end of Part {selectedPart?.id}!</p>
             <ButtonBase onClick={onClickDone}>Mark done</ButtonBase>
           </div>
@@ -154,12 +154,12 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
       </div>
 
       <Modal isOpen={openConfirmDone}>
-        <Image src={BlobbyCheckIcon} height={77} width={109} alt="blobby check" />
+        <Image src={BlobbyCheckIcon} height={77} width={110} alt="blobby check" />
         <p className={episodeStyles.modalTitle}>
           Done! You finished editing Part {selectedPart?.id} within 10mins
         </p>
         <p className={episodeStyles.modalMessage}>
-          Blobby is happy to help you make more efficient edits,<br />keep up the quality work!
+          Loki is happy to help you make more efficient edits,<br />keep up the quality work!
         </p>
         <ButtonBase onClick={onConfirmDone}>
           Continue next part
@@ -173,7 +173,7 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
           Hoorah! All episodes of Marry Me are edited
         </p>
         <p className={episodeStyles.modalMessage}>
-          Blobby is already excited to hop on your next editing<br />journey!
+          Loki is already excited to hop on your next editing<br />journey!
         </p>
         <ButtonBase>
           Share this milestone with the Team!

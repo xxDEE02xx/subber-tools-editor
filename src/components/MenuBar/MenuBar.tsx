@@ -20,7 +20,7 @@ const MenuBar: FC = () => {
           alt="Viki Community Logo"
         />
       </div>
-      <div className={menubarStyles.centerContent}>EN Editing</div>
+      <div className={menubarStyles.centerContent}>EN Editor</div>
       <div className={menubarStyles.rightContent}>
         <Image src={EmailIcon} height={24} width={24} alt="email icon" />
         <span className={menubarStyles.count}>5</span>

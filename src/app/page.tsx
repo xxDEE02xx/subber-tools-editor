@@ -97,6 +97,7 @@ export default function Home() {
               newContent: suggestion.new_content,
               diffContent: suggestion.diff_content,
             })),
+            suggestionHistory: [],
           })),
         2: (segment2 as any).segments.map((segment: any) => ({
             id: segment.id,
@@ -123,6 +124,7 @@ export default function Home() {
               newContent: suggestion.new_content,
               diffContent: suggestion.diff_content,
             })),
+            suggestionHistory: [],
         })),
       })
     }

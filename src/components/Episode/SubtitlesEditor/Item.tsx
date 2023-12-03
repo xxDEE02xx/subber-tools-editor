@@ -11,8 +11,9 @@ import { SuggestionType } from '@/types/suggestion'
 import { useEpisodeStore } from '@/store/episode'
 import { useSegmentStore } from '@/store/segment'
 
-import subtitlesEditorStyles from './subtitlesEditor.module.css'
+import { groupString, getSuggestionReplacement } from '@/helper/suggestion'
 
+import subtitlesEditorStyles from './subtitlesEditor.module.css'
 
 const toTimeString = (totalSeconds: number) => {
   const totalMs = totalSeconds * 1000
@@ -21,41 +22,76 @@ const toTimeString = (totalSeconds: number) => {
   return result
 }
 
-const getSubstring = (text: string, char1: string, char2: string) => {
-  return text.slice(
-    text.indexOf(char1) + 1,
-    text.lastIndexOf(char2),
-  );
-}
-
 const GetGrammarComparison: FC<{ value: string }> = ({ value }) => {
-  const toReplace = getSubstring(value, '[-', '-]').replaceAll('-', '')
-  const suggestion = getSubstring(value, '{+', '+}').replace('+', '')
+  const collections = groupString(value)
+
+  const contructValue = (val: string) => {
+    const { toReplace, suggestion } = getSuggestionReplacement(val)
+    if (!toReplace && !suggestion) return val
+    else if (toReplace && !suggestion) {
+      return <span className={subtitlesEditorStyles.grammarError}>{toReplace}</span>
+    }
+    else if (!toReplace && suggestion) {
+      return <span className={subtitlesEditorStyles.grammarSuggestion}>{suggestion}</span>
+    }
+    return (
+      <>
+        <span className={subtitlesEditorStyles.grammarError}>{toReplace}</span>{' '}<span className={subtitlesEditorStyles.grammarSuggestion}>{suggestion}</span>
+      </>
+    )
+  }
+
+  let key = 0
+  if (collections.length === 0) return value
+  const valueArr: string[] = []
+  collections.forEach(collection => {
+    if (collection.from > key) {
+      valueArr.push(value.slice(key, collection.from).trim())
+    }
+    valueArr.push(value.slice(collection.from, collection.to+1).trim())
+    key = collection.to+1
+  })
+  if (key < value.length) {
+    valueArr.push(value.slice(key, value.length).trim())
+  }
 
   return (
     <>
-      <span className={subtitlesEditorStyles.grammarError}>{toReplace}</span>{' '}
-      {value.replaceAll(`\n`, '').length != suggestion.length && <span className={subtitlesEditorStyles.grammarSuggestion}>{suggestion}</span>}
+      {valueArr.map((item, key) => (
+        <span key={`suggestion-struct-${key}`}>{contructValue(item)}{' '}</span>
+      ))}
     </>
   )
 }
 
-const Item: FC<ItemProps> = ({showAndSeekPlayer, duration, data, completed, suggestions, segmentId, history }) => {
+const Item: FC<ItemProps> = ({
+  showAndSeekPlayer,
+  duration,
+  data,
+  completed,
+  suggestions,
+  segmentId,
+  history,
+}) => {
   const [ showDropdown, setShowDropdown ] = useState<string>('')
   const [ isFocus, setIsFocus ] = useState<boolean>(true)
   const [activeEpisodeId] = useEpisodeStore((state) => [
     state.activeEpisodeId,
   ])
-  const [updateSubtitle] = useSegmentStore((state) => [
-    state.updateSubtitle
+  const [updateSubtitle, setSuggestionImplemented] = useSegmentStore((state) => [
+    state.updateSubtitle,
+    state.setSuggestionImplemented,
   ])
 
   const onChange = (value: string) => {
     updateSubtitle(activeEpisodeId, segmentId, value)
   }
 
-  const revertValue = (value: string) => {
+  const revertValue = (value: string, suggestionId?: number) => {
     updateSubtitle(activeEpisodeId, segmentId, value)
+    if (suggestionId) {
+      setSuggestionImplemented(activeEpisodeId, segmentId, suggestionId)
+    }
     setShowDropdown('')
   }
 
@@ -68,8 +104,8 @@ const Item: FC<ItemProps> = ({showAndSeekPlayer, duration, data, completed, sugg
   }
 
   const isWithHistory = !!history.length
-  const paraphrase = suggestions?.filter(suggestion => ['english_paraphrase', 'english_neutral'].includes(suggestion.type))
-  const fixGrammar = suggestions?.find(suggestion => suggestion.type === 'english_fix_grammar')
+  const paraphrase = suggestions?.filter(suggestion => ['english_paraphrase', 'english_neutral'].includes(suggestion.type) && !suggestion.isImplemented)
+  const fixGrammar = suggestions?.find(suggestion => suggestion.type === 'english_fix_grammar' && !suggestion.isImplemented)
 
   let dropdown = {
     icon: '/icons/history.svg',
@@ -104,13 +140,24 @@ const Item: FC<ItemProps> = ({showAndSeekPlayer, duration, data, completed, sugg
                 history={history}
                 setIsFocus={setIsFocus}
                 setShowDropdown={onSetShowDropdown}
+                onSelectSugggestion={(suggestionId: number) => {
+                  setSuggestionImplemented(activeEpisodeId, segmentId, suggestionId)
+                }}
               />
               {showDropdown && (
                 <ClickAwayListener onClickAway={() => setShowDropdown('')}>
                   <div className={subtitlesEditorStyles.history}>
                     <h5>
-                      <ReactSVG src={dropdown.icon} />
-                      <span>{dropdown.label}</span>
+                      <div>
+                        <ReactSVG src={dropdown.icon} />
+                        <span>{dropdown.label}</span>
+                      </div>
+                      {showDropdown !== 'history' && (
+                        <button className={subtitlesEditorStyles.headerButton}>
+                          <ReactSVG src='/icons/refresh.svg' />
+                          Regenerate
+                        </button>
+                      )}
                     </h5>
                     <div className={subtitlesEditorStyles.historyList}>
                       {showDropdown === 'history' ?
@@ -126,11 +173,11 @@ const Item: FC<ItemProps> = ({showAndSeekPlayer, duration, data, completed, sugg
                         )) : 
                         showDropdown === 'suggestions' ?
                           paraphrase?.map(suggestion => (
-                            <button className={subtitlesEditorStyles.historyItem} onClick={() => revertValue(suggestion.newContent)} key={`sub-suggestions-${suggestion.id}`}>
+                            <button className={subtitlesEditorStyles.historyItem} onClick={() => revertValue(suggestion.newContent, suggestion.id)} key={`sub-suggestions-${suggestion.id}`}>
                               <p>{suggestion.newContent}</p>
                             </button>
                           )) :
-                          fixGrammar && <button className={subtitlesEditorStyles.historyItem} onClick={() => revertValue(fixGrammar.newContent)} key={`sub-grammar-1`}>
+                          fixGrammar && <button className={subtitlesEditorStyles.historyItem} onClick={() => revertValue(fixGrammar.newContent, fixGrammar.id)} key={`sub-grammar-1`}>
                             <p>
                               ...<GetGrammarComparison value={fixGrammar.diffContent} />...
                             </p>
@@ -142,32 +189,34 @@ const Item: FC<ItemProps> = ({showAndSeekPlayer, duration, data, completed, sugg
               )}
             </div>
             <div className={subtitlesEditorStyles.actions}>
-              {isFocus && (
-                <>
-                  <button
-                    {...(paraphrase || []).length === 0 ? {
-                      className: subtitlesEditorStyles.btnDisabled
-                    } : {
-                      onClick: () => onSetShowDropdown('suggestions')
-                    }}
-                  >
-                    <ReactSVG src="/icons/sort.svg" className={subtitlesEditorStyles.icon} />
-                    <span>Paraphrase</span>
-                  </button>
-                  <Tooltip title={!isWithHistory ? "No edits recorded" : ''} placement="right">
+              <div className={subtitlesEditorStyles.actionsSub}>
+                {isFocus && (
+                  <>
                     <button
-                      {...!isWithHistory ? {
+                      {...(paraphrase || []).length === 0 ? {
                         className: subtitlesEditorStyles.btnDisabled
                       } : {
-                        onClick: () => onSetShowDropdown('history')
+                        onClick: () => onSetShowDropdown('suggestions')
                       }}
                     >
-                      <ReactSVG src="/icons/time.svg" className={subtitlesEditorStyles.icon} />
-                      <span>Edited versions</span>
+                      <ReactSVG src="/icons/sort.svg" className={subtitlesEditorStyles.icon} />
+                      <span>Paraphrase</span>
                     </button>
-                  </Tooltip>
-                </>
-              )}
+                    <Tooltip title={!isWithHistory ? "No edits recorded" : ''} placement="right">
+                      <button
+                        {...!isWithHistory ? {
+                          className: subtitlesEditorStyles.btnDisabled
+                        } : {
+                          onClick: () => onSetShowDropdown('history')
+                        }}
+                      >
+                        <ReactSVG src="/icons/time.svg" className={subtitlesEditorStyles.icon} />
+                        <span>Edited versions</span>
+                      </button>
+                    </Tooltip>
+                  </>
+                )}
+              </div>
             </div>
           </>
         ) : <p className={subtitlesEditorStyles.doneData}>{data}</p>}

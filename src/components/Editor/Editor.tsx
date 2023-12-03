@@ -8,16 +8,20 @@ import CuteQcIcon from "../../../public/icons/cutesyqc.svg"
 
 import { SuggestionType } from '@/types/suggestion'
 
+import { groupString, getSubstring, replaceAtIndex } from '@/helper/suggestion'
+
 import editorStyles from './editor.module.css'
 
-const getSubstring = (text: string, char1: string, char2: string) => {
-  return text.slice(
-    text.indexOf(char1) + 1,
-    text.lastIndexOf(char2),
-  );
-}
 
-const Editor: FC<EditorProps> = ({ data, onChange, suggestions, history, setIsFocus, setShowDropdown }) => {
+const Editor: FC<EditorProps> = ({
+  data,
+  onChange,
+  suggestions,
+  history,
+  setIsFocus,
+  setShowDropdown,
+  onSelectSugggestion,
+}) => {
   const [withRecommendation, setWithRecommendation] = useState<boolean>(true)
   const editor = useEditor({
     extensions: [
@@ -26,21 +30,23 @@ const Editor: FC<EditorProps> = ({ data, onChange, suggestions, history, setIsFo
     content: data,
     editorProps: {
       handleClickOn: (view, pos) => {
-        const text = view.state.doc.textContent.replaceAll('  ', ' ').trim()
-        const wordArr = text.split(' ')
+        const fixGrammar = suggestions?.find(suggestion => suggestion.type === 'english_fix_grammar' && !suggestion.isImplemented)
+        if (fixGrammar) {
+          // const text = view.state.doc.textContent.replaceAll('  ', ' ').trim()
+          // const wordArr = text.split(' ')
 
-        let value = ''
-        let incrementedKey = 0
-        for(let i=0; i<= wordArr.length-1; i++) {
-          incrementedKey += wordArr[i].length + 1
+          // let value = ''
+          // let incrementedKey = 0
+          // for(let i=0; i<= wordArr.length-1; i++) {
+          //   incrementedKey += wordArr[i].length + 1
 
-          if (pos <= incrementedKey) {
-            value = wordArr[i]
-            break
-          }
+          //   if (pos <= incrementedKey) {
+          //     value = wordArr[i]
+          //     break
+          //   }
+          // }
+          setShowDropdown('grammar')
         }
-
-        setShowDropdown('grammar')
       }
     },
     onBlur: ({ editor }) => {
@@ -88,23 +94,37 @@ const Editor: FC<EditorProps> = ({ data, onChange, suggestions, history, setIsFo
   const editorTextContent = editor?.state.doc.textContent
 
   useEffect(() => {
-    const fixGrammar = suggestions?.find(suggestion => suggestion.type === 'english_fix_grammar')
+    const fixGrammar = suggestions?.find(suggestion => suggestion.type === 'english_fix_grammar' && !suggestion.isImplemented)
     if (fixGrammar?.diffContent && editor && history.length === 0) {
+      const collections = groupString(fixGrammar?.diffContent)
       const toReplace = getSubstring(fixGrammar?.diffContent, '[-', '-]').replaceAll('-', '')
-      const dataDestruct = data.replace(toReplace, `<strong>${toReplace}</strong>`)
 
-      setTimeout(() => editor.commands.setContent(dataDestruct), 1000)
+      if (toReplace && toReplace.length <= data.length) {
+        const dataDestruct = replaceAtIndex(data, collections[0].from, toReplace)
+        // const dataDestruct = data.replace(toReplace, `<strong>${toReplace}</strong>`)
+
+        setTimeout(() => editor.commands.setContent(dataDestruct), 1000)
+      }
     }
   }, [editor, suggestions])
 
-  const applyRecommnedation = (newContent: string) => {
+  const applyRecommnedation = (type: string, id: number) => {
+    onSelectSugggestion(id)
+    let newContent = `<i>${editor?.state.doc.textContent || ''}</i>`
+
+    if (type === 'lyric') {
+      newContent = `🎵 ${newContent} 🎵`
+    }
+
     editor?.commands.setContent({
       type: "text",
       text: newContent
     })
+    if (onChange) onChange(newContent)
     setWithRecommendation(false)
-    editor?.commands.focus()
   }
+
+  const filteredSuggestions = suggestions?.filter(suggestion => ['lyric', 'screen_text'].includes(suggestion.type) && !suggestion.isImplemented)
 
   return (
     <div className={editorStyles.wrapper}>
@@ -119,8 +139,8 @@ const Editor: FC<EditorProps> = ({ data, onChange, suggestions, history, setIsFo
       <div className={editorStyles.editorCount}>
         {isFocused && `${editorTextContent?.length || 0} / 5000`}
       </div>
-      {history.length === 0 && withRecommendation && suggestions &&
-        suggestions.filter(suggestion => ['lyric', 'screen_text'].includes(suggestion.type)).map(suggestion => (
+      {withRecommendation && suggestions && filteredSuggestions && filteredSuggestions.length > 0 &&
+        filteredSuggestions.map(suggestion => (
           <div className={editorStyles.recommendation} key={`suggestion-${suggestion.segmentId}-${suggestion.id}`}>
             <div className={editorStyles.recommendationLeft}>
               <Image src={CuteQcIcon} height={24} width={24} alt="cute qc icon" />
@@ -132,7 +152,7 @@ const Editor: FC<EditorProps> = ({ data, onChange, suggestions, history, setIsFo
               </p>
             </div>
             <div className={editorStyles.recommendationRight}>
-              <button onClick={() => applyRecommnedation(suggestion.newContent)}>Apply</button>
+              <button onClick={() => applyRecommnedation(suggestion.type, suggestion.id)}>Apply</button>
               <button onClick={() => setWithRecommendation(false)}>Ignore</button>
             </div>
           </div>
@@ -148,6 +168,7 @@ interface EditorProps {
   history: string[]
   setIsFocus: (value: boolean) => void;
   setShowDropdown: (value: string) => void;
+  onSelectSugggestion: (id: number) => void;
 }
 
 export { Editor }

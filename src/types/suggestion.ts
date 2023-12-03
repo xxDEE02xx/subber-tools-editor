@@ -6,4 +6,5 @@ export type SuggestionType = {
   oldContent: string;
   newContent: string;
   diffContent: string;
+  isImplemented?: boolean;
 }

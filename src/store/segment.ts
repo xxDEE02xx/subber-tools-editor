@@ -7,6 +7,7 @@ interface SegmentState {
   segments: Record<number, SegmentType[]>;
   setSegments: (segments: Record<number, SegmentType[]>) => void
   updateSubtitle: (episodeId: number, segmentId: number, value: string) => void
+  setSuggestionImplemented: (episodeId: number, segmentId: number, suggestionId: number) => void
 }
 
 const useSegmentStore = create<SegmentState>((set) => ({
@@ -25,6 +26,44 @@ const useSegmentStore = create<SegmentState>((set) => ({
               segment?.subtitle.content
             ],
           }
+        }
+      }
+      return segment
+    })
+
+    return { segments: {
+      ...state.segments,
+      [episodeId]: newSegment
+     }}
+  }),
+  // addSuggestionHistory: (episodeId, segmentId, type) => set((state) => {
+  //   const newSegment = state.segments[episodeId].map(segment => {
+  //     if (segment.id === segmentId) {
+  //       return {
+  //         ...segment,
+  //         suggestionHistory: [
+  //           ...segment.suggestionHistory,
+  //           type,
+  //         ],
+  //       }
+  //     }
+  //     return segment
+  //   })
+
+  //   return { segments: {
+  //     ...state.segments,
+  //     [episodeId]: newSegment
+  //    }}
+  // }),
+  setSuggestionImplemented: (episodeId, segmentId, suggestionId) => set((state) => {
+    const newSegment = state.segments[episodeId].map(segment => {
+      if (segment.id === segmentId) {
+        return {
+          ...segment,
+          suggestions: segment.suggestions?.map(suggestion => {
+            if (suggestion.id === suggestionId) suggestion.isImplemented = true
+            return suggestion
+          })
         }
       }
       return segment

@@ -5,7 +5,7 @@
 
 .itemWrapper {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 24px;
 }
 .itemWrapperCompleted {
@@ -46,6 +46,12 @@
   display: flex;
   flex-direction: column;
   margin-left: -10px;
+  width: 40px;
+}
+.actionsSub {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 .actions button {
   background: none;
@@ -121,6 +127,7 @@
   line-height: 24px;
   padding: 0;
   margin: 0;
+  width: 50%;
 }
 
 .history {
@@ -137,13 +144,14 @@
   display: flex;
   padding: 18px 20px;
   gap: 8px;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-content: center;
 }
-.history h5 div {
+.history h5 > div {
   display: flex;
   align-content: center;
   align-items: center;
+  gap: 8px;
 }
 .history h5 div svg {
   display: block;
@@ -227,4 +235,25 @@
   font-style: normal;
   font-weight: 700;
   line-height: 24px;
+}
+
+.headerButton {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #000;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 20px; 
+}
+.headerButton:hover {
+  color: #0C9BFF;
+}
+.headerButton:hover svg path {
+  fill: #0C9BFF;
 }
