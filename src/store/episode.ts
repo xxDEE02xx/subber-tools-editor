@@ -98,4 +98,13 @@ const useEpisodeStore = create<EpisodeState>((set) => ({
   }),
 }));
 
-export { useEpisodeStore }
+const mapPartData = (part: any) => ({
+  id: part.id,
+  completed: part.completed,
+  title: `Part ${part.number}`,
+  startTime: part.start_time,
+  endTime: part.end_time,
+  number: part.number,
+})
+
+export { useEpisodeStore, mapPartData }

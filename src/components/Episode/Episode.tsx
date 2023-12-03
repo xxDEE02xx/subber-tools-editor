@@ -47,7 +47,6 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
   const [openAssigned, setOpenAssigned] = useState<boolean>(false)
   const [assignedRef, setAssignedRef] = useState<null | HTMLElement>(null)
   const [selectedIndex, setSelectedIndex] = useState<number>(0)
-  const [showTopBtn, setShowTopBtn] = useState<boolean>(false)
   const [openConfirmDone, setOpenConfirmDone] = useState(false)
   const [openAllDone, setOpenAllDone] = useState(false)
 
@@ -79,7 +78,7 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
   }
 
   const onScrollTop = () => {
-    (contentRef?.current as any).scrollTo({ top: 0, behavior: 'smooth' })
+    setTimeout(() => (contentRef?.current as any).scrollTo({ top: 0, behavior: 'auto' }), 300)
   }
 
   useEffect(() => {

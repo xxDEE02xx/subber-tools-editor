@@ -13,9 +13,8 @@ import { SideBar } from '@/components/SideBar'
 import { Episode } from '@/components/Episode'
 import { Modal } from '@/components/Modal'
 
-import { useEpisodeStore } from '@/store/episode'
-import { useSubtitleStore } from '@/store/subtitle'
-import { useSegmentStore } from '@/store/segment'
+import { useEpisodeStore, mapPartData } from '@/store/episode'
+import { useSegmentStore, mapSegmentData } from '@/store/segment'
 
 import { useFetch } from "@/store/useFetch"
 
@@ -37,10 +36,6 @@ export default function Home() {
     state.setActivePartId,
   ])
 
-  const [subtitles] = useSubtitleStore((state) => [
-    state.subtitles,
-  ])
-
   const [segments, setSegments] = useSegmentStore((state) => [
     state.segments,
     state.setSegments,
@@ -55,14 +50,9 @@ export default function Home() {
       const newEpisodes = episodes.map(episode => {
         return {
           ...episode,
-          parts: (episode.id === 1 ? (episode1Parts as any).video_parts : (episode2Parts as any).video_parts as []).map((part: Record<string, any>) => ({
-            id: part.id,
-            completed: part.completed,
-            title: `Part ${part.number}`,
-            startTime: part.start_time,
-            endTime: part.end_time,
-            number: part.number,
-          }))
+          parts: (episode.id === 1 ? 
+            (episode1Parts as any).video_parts : 
+            (episode2Parts as any).video_parts as []).map((part: Record<string, any>) => mapPartData(part))
         }
       })
       setEpisodes(newEpisodes)
@@ -73,59 +63,8 @@ export default function Home() {
   useEffect(() => {
     if (segment1 && segment2) {
       setSegments({
-        1: (segment1 as any).segments.map((segment: any) => ({
-            id: segment.id,
-            userId: segment.user_id,
-            videoId: segment.video_id,
-            startTime: segment.start_time,
-            endTime: segment.end_time,
-            subtitle: {
-              id: segment.subtitle.id,
-              userId: segment.subtitle.user_id,
-              videoId: segment.subtitle.video_id,
-              segmentId: segment.subtitle.segment_id,
-              languageCode: segment.subtitle.language_code,
-              content: segment.subtitle.content,
-              history: [],
-            },
-            suggestions: segment.subtitle_suggestions && segment.subtitle_suggestions.map((suggestion: any) => ({
-              id: suggestion.id,
-              segmentId: suggestion.segment_id,
-              subtitleId: suggestion.subtitle_id,
-              type: suggestion.type,
-              oldContent: suggestion.old_content,
-              newContent: suggestion.new_content,
-              diffContent: suggestion.diff_content,
-            })),
-            suggestionHistory: [],
-          })),
-        2: (segment2 as any).segments.map((segment: any) => ({
-            id: segment.id,
-            userId: segment.user_id,
-            videoId: segment.video_id,
-            startTime: segment.start_time,
-            endTime: segment.end_time,
-            subtitle: {
-              id: segment.subtitle.id,
-              userId: segment.subtitle.user_id,
-              videoId: segment.subtitle.video_id,
-              segmentId: segment.subtitle.segment_id,
-              languageCode: segment.subtitle.language_code,
-              content: segment.subtitle.content,
-              history: [],
-            },
-            suggestions: segment.subtitle_suggestions && segment.subtitle_suggestions.map((suggestion: any) => ({
-              id: suggestion.id,
-              segmentId: suggestion.segment_id,
-              subtitleId: suggestion.subtitle_id,
-              type: suggestion.type,
-              oldValue: suggestion.old_value,
-              oldContent: suggestion.old_content,
-              newContent: suggestion.new_content,
-              diffContent: suggestion.diff_content,
-            })),
-            suggestionHistory: [],
-        })),
+        1: (segment1 as any).segments.map((segment: any) => mapSegmentData(segment)),
+        2: (segment2 as any).segments.map((segment: any) => mapSegmentData(segment)),
       })
     }
   }, [segment1, segment2]);

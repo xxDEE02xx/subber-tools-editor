@@ -36,25 +36,6 @@ const useSegmentStore = create<SegmentState>((set) => ({
       [episodeId]: newSegment
      }}
   }),
-  // addSuggestionHistory: (episodeId, segmentId, type) => set((state) => {
-  //   const newSegment = state.segments[episodeId].map(segment => {
-  //     if (segment.id === segmentId) {
-  //       return {
-  //         ...segment,
-  //         suggestionHistory: [
-  //           ...segment.suggestionHistory,
-  //           type,
-  //         ],
-  //       }
-  //     }
-  //     return segment
-  //   })
-
-  //   return { segments: {
-  //     ...state.segments,
-  //     [episodeId]: newSegment
-  //    }}
-  // }),
   setSuggestionImplemented: (episodeId, segmentId, suggestionId) => set((state) => {
     const newSegment = state.segments[episodeId].map(segment => {
       if (segment.id === segmentId) {
@@ -76,4 +57,31 @@ const useSegmentStore = create<SegmentState>((set) => ({
   }),
 }));
 
-export { useSegmentStore }
+const mapSegmentData = (segment: any) => ({
+  id: segment.id,
+  userId: segment.user_id,
+  videoId: segment.video_id,
+  startTime: segment.start_time,
+  endTime: segment.end_time,
+  subtitle: {
+    id: segment.subtitle.id,
+    userId: segment.subtitle.user_id,
+    videoId: segment.subtitle.video_id,
+    segmentId: segment.subtitle.segment_id,
+    languageCode: segment.subtitle.language_code,
+    content: segment.subtitle.content,
+    history: [],
+  },
+  suggestions: segment.subtitle_suggestions && segment.subtitle_suggestions.map((suggestion: any) => ({
+    id: suggestion.id,
+    segmentId: suggestion.segment_id,
+    subtitleId: suggestion.subtitle_id,
+    type: suggestion.type,
+    oldContent: suggestion.old_content,
+    newContent: suggestion.new_content,
+    diffContent: suggestion.diff_content,
+  })),
+  suggestionHistory: [],
+})
+
+export { useSegmentStore, mapSegmentData }
