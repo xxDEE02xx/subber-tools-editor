@@ -152,7 +152,7 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
         <ScrollTop contentRef={contentRef} onScrollTop={onScrollTop} />
       </div>
 
-      <Modal isOpen={openConfirmDone}>
+      <Modal isOpen={openConfirmDone} onClose={() => setOpenConfirmDone(false)}>
         <Image src={BlobbyCheckIcon} height={77} width={110} alt="blobby check" />
         <p className={episodeStyles.modalTitle}>
           Done! You finished editing Part {selectedPart?.id} within 10mins
@@ -166,7 +166,7 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
         </ButtonBase>
       </Modal>
 
-      <Modal isOpen={openAllDone}>
+      <Modal isOpen={openAllDone} onClose={() => setOpenAllDone(false)}>
         <Image src={BlobbyCheckIcon} height={77} width={109} alt="blobby check" />
         <p className={episodeStyles.modalTitle}>
           Hoorah! All episodes of Marry Me are edited

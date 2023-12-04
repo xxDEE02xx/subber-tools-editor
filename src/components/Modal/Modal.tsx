@@ -10,19 +10,13 @@ import CloseIcon from "../../../public/icons/close.svg"
 
 import modalStyles from './modal.module.css'
 
-const Modal: FC<ModalProps>= ({ isOpen, children  }) => {
-  const [open, setOpen] = useState<boolean>(false)
-
-  useEffect(() => {
-    setOpen(!!isOpen)
-  }, [isOpen])
-
+const Modal: FC<ModalProps>= ({ isOpen, children, onClose  }) => {
   return (
     <ModalComp
       aria-labelledby="transition-modal-title"
       aria-describedby="transition-modal-description"
-      open={open}
-      onClose={() => setOpen(false)}
+      open={!!isOpen}
+      onClose={onClose}
       closeAfterTransition
       slots={{ backdrop: Backdrop }}
       slotProps={{
@@ -31,9 +25,9 @@ const Modal: FC<ModalProps>= ({ isOpen, children  }) => {
         },
       }}
     >
-      <Fade in={open}>
+      <Fade in={!!isOpen}>
         <div className={modalStyles.modal}>
-          <span className={modalStyles.modalClose} onClick={() => setOpen(false)}>
+          <span className={modalStyles.modalClose} onClick={onClose}>
             <Image src={CloseIcon} width={11} height={11} alt="close modal" />
           </span>
           {children}
@@ -45,7 +39,8 @@ const Modal: FC<ModalProps>= ({ isOpen, children  }) => {
 
 type ModalProps = {
   isOpen?: boolean;
-  children: any
+  children: any;
+  onClose: () => void;
 }
 
 export { Modal }

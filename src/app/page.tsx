@@ -93,7 +93,7 @@ export default function Home() {
           </div>
         </>
       )}
-      <Modal isOpen={openWelcome}>
+      <Modal isOpen={openWelcome} onClose={() => setOpenWelcome(false)}>
         <Image src={BlobbyLokiIcon} height={85} width={89} alt="blobby check" />
         <p className={pageStyles.modalTitle}>
           Meet Loki, your personal editor sidekick!
