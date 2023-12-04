@@ -59,12 +59,12 @@ const Editor: FC<EditorProps> = ({
     },
     onCreate: ({ editor }) => {
       const withTag = data.indexOf('<i>') >= 0
-      const withMusic = data.indexOf('🎵') >= 0
-      const withMusicAndTag = data.indexOf('🎵 <i>') >= 0
+      const withMusic = data.indexOf('♫') >= 0 || data.indexOf('🎵') >= 0
+      const withMusicAndTag = data.indexOf('♫ <i>') >= 0 || data.indexOf('🎵 <i>') >= 0
       
       const constructText = () => {
         if (withMusicAndTag) {
-          return `🎵 <i>${editor?.state.doc.textContent.replace('<i>', '').replace('</i>', '').replaceAll('🎵', '').trim()}</i> 🎵`
+          return `♫ <i>${editor?.state.doc.textContent.replace('<i>', '').replace('</i>', '').replaceAll('♫', '').replaceAll('🎵', '').trim()}</i> ♫`
         } else if (withMusic) {
           return editor?.state.doc.textContent
         } else if (withTag) {
@@ -141,7 +141,7 @@ const Editor: FC<EditorProps> = ({
       </div>
       {withRecommendation && suggestions && filteredSuggestions && filteredSuggestions.length > 0 &&
         filteredSuggestions.map(suggestion => (
-          <div className={editorStyles.recommendation} key={`suggestion-${suggestion.segmentId}-${suggestion.id}`}>
+          <div className={`${editorStyles.recommendation} ${suggestion.type !== 'lyric' ? editorStyles.lyrics : ''}`} key={`suggestion-${suggestion.segmentId}-${suggestion.id}`}>
             <div className={editorStyles.recommendationLeft}>
               <Image src={CuteQcIcon} height={24} width={24} alt="cute qc icon" />
               <p>

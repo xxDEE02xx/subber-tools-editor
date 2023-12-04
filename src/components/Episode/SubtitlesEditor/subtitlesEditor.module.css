@@ -158,8 +158,16 @@
   width: 14px;
   height: 14px;
 }
+.headerSortIcon div svg {
+  width: 24px !important;
+  height: 24px !important;
+}
+.historyLabelIcon div svg path,
+.historyLabelIcon div svg circle {
+  fill: rgba(0, 0, 0, 0.94);
+}
 .history h5 span {
-  color: rgba(0, 0, 0, 0.55);
+  color: rgba(0, 0, 0, 0.94);
   font-size: 14px;
   font-style: normal;
   font-weight: 700;

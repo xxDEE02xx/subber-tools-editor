@@ -48,15 +48,16 @@ export default function Home() {
   useEffect(() => {
     if (episode1Parts && episode2Parts) {
       const newEpisodes = episodes.map(episode => {
+        const completed = episode.id === 1 ? true : false
         return {
           ...episode,
           parts: (episode.id === 1 ? 
             (episode1Parts as any).video_parts : 
-            (episode2Parts as any).video_parts as []).map((part: Record<string, any>) => mapPartData(part))
+            (episode2Parts as any).video_parts as []).map((part: Record<string, any>) => mapPartData(part, completed))
         }
       })
       setEpisodes(newEpisodes)
-      setActivePartId((episode1Parts as any).video_parts[0].id)
+      setActivePartId((episode2Parts as any).video_parts[0].id)
     }
   }, [episode1Parts, episode2Parts]);
 

@@ -78,7 +78,7 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
   }
 
   const onScrollTop = () => {
-    setTimeout(() => (contentRef?.current as any).scrollTo({ top: 0, behavior: 'auto' }), 300)
+    setTimeout(() => (contentRef?.current as any).scrollTo({ top: 0, behavior: 'smooth' }), 300)
   }
 
   useEffect(() => {
@@ -169,7 +169,7 @@ const Episode: FC<EpisodeProps> = ({ showAndSeekPlayer }) => {
       <Modal isOpen={openAllDone} onClose={() => setOpenAllDone(false)}>
         <Image src={BlobbyCheckIcon} height={77} width={109} alt="blobby check" />
         <p className={episodeStyles.modalTitle}>
-          Hoorah! All episodes of Marry Me are edited
+          Hoorah! All episodes of Meow~Ears Up! are edited
         </p>
         <p className={episodeStyles.modalMessage}>
           Loki is already excited to hop on your next editing<br />journey!

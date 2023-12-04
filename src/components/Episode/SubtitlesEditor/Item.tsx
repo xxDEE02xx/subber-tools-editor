@@ -109,17 +109,17 @@ const Item: FC<ItemProps> = ({
 
   let dropdown = {
     icon: '/icons/history.svg',
-    label: 'History'
+    label: 'History',
   }
   if (showDropdown === 'suggestions') {
     dropdown = {
-      icon: '/icons/history.svg',
-      label: 'Suggestions'
+      icon: '/icons/sort.svg',
+      label: 'Suggestions',
     }
   } else if (showDropdown === 'grammar') {
     dropdown = {
       icon: '/icons/edit.svg',
-      label: 'Grammar/Spelling'
+      label: 'Grammar/Spelling',
     }
   }
 
@@ -149,7 +149,7 @@ const Item: FC<ItemProps> = ({
                   <div className={subtitlesEditorStyles.history}>
                     <h5>
                       <div>
-                        <ReactSVG src={dropdown.icon} />
+                        <ReactSVG src={dropdown.icon} className={`${subtitlesEditorStyles.historyLabelIcon} ${showDropdown === 'suggestions' && subtitlesEditorStyles.headerSortIcon}`} />
                         <span>{dropdown.label}</span>
                       </div>
                       {showDropdown !== 'history' && (

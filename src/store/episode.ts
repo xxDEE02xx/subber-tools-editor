@@ -29,7 +29,7 @@ const Episodes = [
 
 const useEpisodeStore = create<EpisodeState>((set) => ({
   episodes: Episodes,
-  activeEpisodeId: Episodes[0].id,
+  activeEpisodeId: Episodes[1].id,
   activePartId: 0,
   setActiveEpisodeId: (episodeId) => set((state) => ({ activeEpisodeId: episodeId })),
   setActivePartId: (partId) => set((state) => ({ activePartId: partId })),
@@ -98,9 +98,9 @@ const useEpisodeStore = create<EpisodeState>((set) => ({
   }),
 }));
 
-const mapPartData = (part: any) => ({
+const mapPartData = (part: any, completed: boolean) => ({
   id: part.id,
-  completed: part.completed,
+  completed: completed,
   title: `Part ${part.number}`,
   startTime: part.start_time,
   endTime: part.end_time,
